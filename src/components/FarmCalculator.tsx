@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowRight, RefreshCw } from 'lucide-react';
+import CompanyBadge from './CompanyBadge';
 
 interface FarmCalculatorProps {
   onBack: () => void;
@@ -229,20 +230,41 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
           <div className="space-y-4 p-6 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl">
             <Label className="text-xl font-bold block">🏢 בחר חברת ביטוח</Label>
             <RadioGroup value={company} onValueChange={(v) => setCompany(v as 'menora' | 'hachshara')} className="grid grid-cols-2 gap-4">
-              <div className={`relative cursor-pointer transition-all duration-300 ${company === 'menora' ? 'scale-105' : ''}`}>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className={`relative cursor-pointer transition-all duration-300 ${company === 'menora' ? 'scale-105' : ''}`}>
                 <RadioGroupItem value="menora" id="comp-menora" className="peer sr-only" />
-                <Label htmlFor="comp-menora" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                <Label htmlFor="comp-menora" className={`flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 ${
+                  company === 'menora' 
+                    ? 'border-menora-secondary bg-menora-primary text-menora-dark' 
+                    : 'border-border hover:border-menora-secondary hover:shadow-lg'
+                }`}>
                   מנורה
                 </Label>
-              </div>
-              <div className={`relative cursor-pointer transition-all duration-300 ${company === 'hachshara' ? 'scale-105' : ''}`}>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className={`relative cursor-pointer transition-all duration-300 ${company === 'hachshara' ? 'scale-105' : ''}`}>
                 <RadioGroupItem value="hachshara" id="comp-hachshara" className="peer sr-only" />
-                <Label htmlFor="comp-hachshara" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                <Label htmlFor="comp-hachshara" className={`flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 ${
+                  company === 'hachshara' 
+                    ? 'border-hachshara-primary bg-hachshara-primary text-white' 
+                    : 'border-border hover:border-hachshara-primary hover:shadow-lg'
+                }`}>
                   הכשרה
                 </Label>
-              </div>
+              </motion.div>
             </RadioGroup>
           </div>
+
+          {/* Company Badge */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={company}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CompanyBadge company={company} />
+            </motion.div>
+          </AnimatePresence>
 
           {company === 'menora' ? (
             <>
