@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -147,32 +148,40 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
               </div>
             </RadioGroup>
             
-            {thirdParty === 'yes' && (
-              <div className="space-y-3 mt-4 animate-fade-in">
-                <Label className="text-lg font-semibold">למה משמש הסוס?</Label>
-                <RadioGroup 
-                  value={thirdPartyType} 
-                  onValueChange={(v) => setThirdPartyType(v as 'pleasure' | 'competition')} 
-                  className="space-y-3"
-                  aria-label="בחר למה משמש הסוס"
+            <AnimatePresence>
+              {thirdParty === 'yes' && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="space-y-3 mt-4 overflow-hidden"
                 >
-                  <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
-                    <div className="flex items-center gap-3">
-                      <RadioGroupItem value="pleasure" id="tp-pleasure" />
-                      <Label htmlFor="tp-pleasure" className="cursor-pointer font-medium">הנאה בלבד</Label>
+                  <Label className="text-lg font-semibold">למה משמש הסוס?</Label>
+                  <RadioGroup 
+                    value={thirdPartyType} 
+                    onValueChange={(v) => setThirdPartyType(v as 'pleasure' | 'competition')} 
+                    className="space-y-3"
+                    aria-label="בחר למה משמש הסוס"
+                  >
+                    <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
+                      <div className="flex items-center gap-3">
+                        <RadioGroupItem value="pleasure" id="tp-pleasure" />
+                        <Label htmlFor="tp-pleasure" className="cursor-pointer font-medium">הנאה בלבד</Label>
+                      </div>
+                      <span className="font-bold text-primary">700 ₪</span>
                     </div>
-                    <span className="font-bold text-primary">700 ₪</span>
-                  </div>
-                  <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
-                    <div className="flex items-center gap-3">
-                      <RadioGroupItem value="competition" id="tp-competition" />
-                      <Label htmlFor="tp-competition" className="cursor-pointer font-medium">תחרויות</Label>
+                    <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
+                      <div className="flex items-center gap-3">
+                        <RadioGroupItem value="competition" id="tp-competition" />
+                        <Label htmlFor="tp-competition" className="cursor-pointer font-medium">תחרויות</Label>
+                      </div>
+                      <span className="font-bold text-primary">800 ₪</span>
                     </div>
-                    <span className="font-bold text-primary">800 ₪</span>
-                  </div>
-                </RadioGroup>
-              </div>
-            )}
+                  </RadioGroup>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </fieldset>
 
           {/* Life Insurance */}
@@ -198,80 +207,88 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
               </div>
             </RadioGroup>
             
-            {lifeInsurance === 'yes' && (
-              <div className="space-y-6 mt-4 animate-fade-in">
-                <div>
-                  <Label htmlFor="horse-value" className="text-lg font-semibold mb-3 block">💰 ערך הסוס (₪)</Label>
-                  <Input
-                    id="horse-value"
-                    type="number"
-                    value={horseValue}
-                    onChange={(e) => setHorseValue(e.target.value)}
-                    className="text-right text-xl h-14"
-                    placeholder="0"
-                    aria-label="הזן את ערך הסוס בשקלים"
-                    aria-describedby="horse-value-desc"
-                  />
-                  <span id="horse-value-desc" className="sr-only">הזן את ערך הסוס בשקלים חדשים</span>
-                </div>
-                
-                <div>
-                  <Label className="text-lg font-semibold mb-3 block">סוג הסוס</Label>
-                  <RadioGroup 
-                    value={horseType} 
-                    onValueChange={(v) => setHorseType(v as 'pleasure' | 'jumping' | 'western')} 
-                    className="space-y-3"
-                    aria-label="בחר סוג הסוס"
-                  >
-                    <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="pleasure" id="type-pleasure" />
-                        <Label htmlFor="type-pleasure" className="cursor-pointer font-medium">סוס הנאה / דרסאז</Label>
+            <AnimatePresence>
+              {lifeInsurance === 'yes' && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="space-y-6 mt-4 overflow-hidden"
+                >
+                  <div>
+                    <Label htmlFor="horse-value" className="text-lg font-semibold mb-3 block">💰 ערך הסוס (₪)</Label>
+                    <Input
+                      id="horse-value"
+                      type="number"
+                      value={horseValue}
+                      onChange={(e) => setHorseValue(e.target.value)}
+                      className="text-right text-xl h-14"
+                      placeholder="0"
+                      aria-label="הזן את ערך הסוס בשקלים"
+                      aria-describedby="horse-value-desc"
+                    />
+                    <span id="horse-value-desc" className="sr-only">הזן את ערך הסוס בשקלים חדשים</span>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-lg font-semibold mb-3 block">סוג הסוס</Label>
+                    <RadioGroup 
+                      value={horseType} 
+                      onValueChange={(v) => setHorseType(v as 'pleasure' | 'jumping' | 'western')} 
+                      className="space-y-3"
+                      aria-label="בחר סוג הסוס"
+                    >
+                      <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
+                        <div className="flex items-center gap-3">
+                          <RadioGroupItem value="pleasure" id="type-pleasure" />
+                          <Label htmlFor="type-pleasure" className="cursor-pointer font-medium">סוס הנאה / דרסאז</Label>
+                        </div>
+                        <span className="font-bold text-primary">5% מערך הסוס</span>
                       </div>
-                      <span className="font-bold text-primary">5% מערך הסוס</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="jumping" id="type-jumping" />
-                        <Label htmlFor="type-jumping" className="cursor-pointer font-medium">סוס קפיצות</Label>
+                      <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
+                        <div className="flex items-center gap-3">
+                          <RadioGroupItem value="jumping" id="type-jumping" />
+                          <Label htmlFor="type-jumping" className="cursor-pointer font-medium">סוס קפיצות</Label>
+                        </div>
+                        <span className="font-bold text-primary">6% מערך הסוס</span>
                       </div>
-                      <span className="font-bold text-primary">6% מערך הסוס</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="western" id="type-western" />
-                        <Label htmlFor="type-western" className="cursor-pointer font-medium">סוס מערבי</Label>
+                      <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
+                        <div className="flex items-center gap-3">
+                          <RadioGroupItem value="western" id="type-western" />
+                          <Label htmlFor="type-western" className="cursor-pointer font-medium">סוס מערבי</Label>
+                        </div>
+                        <span className="font-bold text-primary">6.5% מערך הסוס</span>
                       </div>
-                      <span className="font-bold text-primary">6.5% מערך הסוס</span>
-                    </div>
-                  </RadioGroup>
-                </div>
-                
-                <div className="p-4 bg-background rounded-xl border-2">
-                  <Label className="text-lg font-semibold mb-3 block">🔒 כיסוי פריצה/גניבה</Label>
-                  <p className="text-sm text-muted-foreground mb-3">ללא כיסוי זה תקבל הנחה של 10%</p>
-                  <RadioGroup 
-                    value={theftCoverage} 
-                    onValueChange={(v) => setTheftCoverage(v as 'yes' | 'no')} 
-                    className="grid grid-cols-2 gap-4"
-                    aria-label="בחר האם לכלול כיסוי פריצה וגניבה"
-                  >
-                    <div>
-                      <RadioGroupItem value="yes" id="theft-yes" className="peer sr-only" />
-                      <Label htmlFor="theft-yes" className="flex items-center justify-center h-16 text-xl font-bold rounded-xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=unchecked]:border-border hover:border-primary/50">
-                        כן
-                      </Label>
-                    </div>
-                    <div>
-                      <RadioGroupItem value="no" id="theft-no" className="peer sr-only" />
-                      <Label htmlFor="theft-no" className="flex items-center justify-center h-16 text-xl font-bold rounded-xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-secondary peer-data-[state=checked]:bg-secondary/10 peer-data-[state=unchecked]:border-border hover:border-secondary/50">
-                        לא (הנחה 10%)
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </div>
-            )}
+                    </RadioGroup>
+                  </div>
+                  
+                  <div className="p-4 bg-background rounded-xl border-2">
+                    <Label className="text-lg font-semibold mb-3 block">🔒 כיסוי פריצה/גניבה</Label>
+                    <p className="text-sm text-muted-foreground mb-3">ללא כיסוי זה תקבל הנחה של 10%</p>
+                    <RadioGroup 
+                      value={theftCoverage} 
+                      onValueChange={(v) => setTheftCoverage(v as 'yes' | 'no')} 
+                      className="grid grid-cols-2 gap-4"
+                      aria-label="בחר האם לכלול כיסוי פריצה וגניבה"
+                    >
+                      <div>
+                        <RadioGroupItem value="yes" id="theft-yes" className="peer sr-only" />
+                        <Label htmlFor="theft-yes" className="flex items-center justify-center h-16 text-xl font-bold rounded-xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=unchecked]:border-border hover:border-primary/50">
+                          כן
+                        </Label>
+                      </div>
+                      <div>
+                        <RadioGroupItem value="no" id="theft-no" className="peer sr-only" />
+                        <Label htmlFor="theft-no" className="flex items-center justify-center h-16 text-xl font-bold rounded-xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-secondary peer-data-[state=checked]:bg-secondary/10 peer-data-[state=unchecked]:border-border hover:border-secondary/50">
+                          לא (הנחה 10%)
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </fieldset>
 
           {/* Health Insurance */}
@@ -297,70 +314,96 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
           </fieldset>
 
           {/* Annual Premium Summary */}
-          {annualPremium > 0 && (
-            <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary shadow-xl animate-scale-in">
-              <CardHeader>
-                <CardTitle className="text-2xl">סך הכל לתשלום (שנתי)</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-4xl font-bold bg-gradient-to-l from-primary to-secondary bg-clip-text text-transparent">
-                  {annualPremium.toLocaleString('he-IL')} ₪
-                </div>
-                {breakdown.length > 0 && (
-                  <div className="space-y-2 pt-4 border-t-2">
-                    {breakdown.map((item, idx) => (
-                      <div key={idx} className="flex justify-between text-base">
-                        <span className="text-muted-foreground">• {item.label}</span>
-                        <span className="font-bold">{item.amount.toLocaleString('he-IL')} ₪</span>
+          <AnimatePresence>
+            {annualPremium > 0 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">סך הכל לתשלום (שנתי)</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="text-4xl font-bold bg-gradient-to-l from-primary to-secondary bg-clip-text text-transparent">
+                      {annualPremium.toLocaleString('he-IL')} ₪
+                    </div>
+                    {breakdown.length > 0 && (
+                      <div className="space-y-2 pt-4 border-t-2">
+                        {breakdown.map((item, idx) => (
+                          <div key={idx} className="flex justify-between text-base">
+                            <span className="text-muted-foreground">• {item.label}</span>
+                            <span className="font-bold">{item.amount.toLocaleString('he-IL')} ₪</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Period Calculation */}
-          {annualPremium > 0 && (
-            <div className="space-y-4 p-6 bg-muted/20 rounded-2xl border-2 border-dashed border-primary/30">
-              <h3 className="text-xl font-bold text-primary">חישוב לתקופה מסוימת</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="start-date" className="font-semibold">תאריך תחילת ביטוח</Label>
-                  <Input
-                    id="start-date"
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="text-right"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="end-date" className="font-semibold">תאריך סיום ביטוח</Label>
-                  <Input
-                    id="end-date"
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="text-right"
-                  />
-                </div>
-              </div>
-              
-              {days > 0 && periodPremium > 0 && (
-                <Card className="bg-gradient-to-br from-secondary/20 to-secondary/5 border-2 border-secondary animate-fade-in">
-                  <CardContent className="pt-6 text-center space-y-2">
-                    <div className="text-2xl font-bold text-secondary">
-                      הפרמיה לתקופה שנבחרה: {periodPremium.toLocaleString('he-IL')} ₪
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      ({days} ימים מתוך 365)
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
-              )}
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Period Calculation */}
+          <AnimatePresence>
+            {annualPremium > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="space-y-4 p-6 bg-muted/20 rounded-2xl border-2 border-dashed border-primary/30"
+              >
+                <h3 className="text-xl font-bold text-primary">חישוב לתקופה מסוימת</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="start-date" className="font-semibold">תאריך תחילת ביטוח</Label>
+                    <Input
+                      id="start-date"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="text-right"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="end-date" className="font-semibold">תאריך סיום ביטוח</Label>
+                    <Input
+                      id="end-date"
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="text-right"
+                    />
+                  </div>
+                </div>
+                
+                <AnimatePresence>
+                  {days > 0 && periodPremium > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Card className="bg-gradient-to-br from-secondary/20 to-secondary/5 border-2 border-secondary">
+                        <CardContent className="pt-6 text-center space-y-2">
+                          <div className="text-2xl font-bold text-secondary">
+                            הפרמיה לתקופה שנבחרה: {periodPremium.toLocaleString('he-IL')} ₪
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            ({days} ימים מתוך 365)
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <Button className="w-full bg-gradient-to-l from-primary to-secondary hover:from-secondary hover:to-primary text-white text-xl py-7" size="lg">
             המשך להזמנה

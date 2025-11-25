@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -468,36 +469,44 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                   </div>
                 </RadioGroup>
 
-                {employerLiability === 'yes' && (
-                  <div className="space-y-4 mt-4 animate-fade-in">
-                    <div>
-                      <Label htmlFor="admin-employees" className="font-semibold block mb-2">👨‍💼 עובדים מנהלתיים (מזכירה, פקידה וכו')</Label>
-                      <p className="text-sm text-muted-foreground mb-2">200 ₪ לכל עובד</p>
-                      <Input
-                        id="admin-employees"
-                        type="number"
-                        min="0"
-                        value={adminEmployees}
-                        onChange={(e) => setAdminEmployees(e.target.value)}
-                        className="text-right text-xl h-14"
-                        placeholder="0"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="non-admin-employees" className="font-semibold block mb-2">👷 עובדים לא מנהלתיים (מדריכים, תחזוקה וכו')</Label>
-                      <p className="text-sm text-muted-foreground mb-2">800 ₪ לכל עובד</p>
-                      <Input
-                        id="non-admin-employees"
-                        type="number"
-                        min="0"
-                        value={nonAdminEmployees}
-                        onChange={(e) => setNonAdminEmployees(e.target.value)}
-                        className="text-right text-xl h-14"
-                        placeholder="0"
-                      />
-                    </div>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {employerLiability === 'yes' && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="space-y-4 mt-4 overflow-hidden"
+                    >
+                      <div>
+                        <Label htmlFor="admin-employees" className="font-semibold block mb-2">👨‍💼 עובדים מנהלתיים (מזכירה, פקידה וכו')</Label>
+                        <p className="text-sm text-muted-foreground mb-2">200 ₪ לכל עובד</p>
+                        <Input
+                          id="admin-employees"
+                          type="number"
+                          min="0"
+                          value={adminEmployees}
+                          onChange={(e) => setAdminEmployees(e.target.value)}
+                          className="text-right text-xl h-14"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="non-admin-employees" className="font-semibold block mb-2">👷 עובדים לא מנהלתיים (מדריכים, תחזוקה וכו')</Label>
+                        <p className="text-sm text-muted-foreground mb-2">800 ₪ לכל עובד</p>
+                        <Input
+                          id="non-admin-employees"
+                          type="number"
+                          min="0"
+                          value={nonAdminEmployees}
+                          onChange={(e) => setNonAdminEmployees(e.target.value)}
+                          className="text-right text-xl h-14"
+                          placeholder="0"
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </>
           ) : (
