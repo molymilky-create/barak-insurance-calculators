@@ -11,11 +11,11 @@ interface InstructorCalculatorProps {
 }
 
 const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
-  const [professionalLiability, setProfessionalLiability] = useState('yes');
-  const [publicLiability, setPublicLiability] = useState('yes');
-  const [numInstructors, setNumInstructors] = useState('1');
+  const [professionalLiability, setProfessionalLiability] = useState('no');
+  const [publicLiability, setPublicLiability] = useState('no');
+  const [numInstructors, setNumInstructors] = useState('0');
   const [coverage, setCoverage] = useState('standard');
-  const [annualRevenue, setAnnualRevenue] = useState('200000');
+  const [annualRevenue, setAnnualRevenue] = useState('0');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   
@@ -71,29 +71,33 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
   }, [startDate, endDate, annualPremium]);
 
   return (
-    <div className="container mx-auto px-6 py-8" dir="rtl">
-      <Button variant="outline" onClick={onBack} className="mb-6">
+    <div className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl">
+      <Button variant="outline" onClick={onBack} className="mb-6 hover-scale">
         <ArrowRight className="ml-2 h-4 w-4" />
         חזרה למסך בחירה
       </Button>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">מחשבון ביטוח מדריכי רכיבה</CardTitle>
-          <CardDescription>הזן את הפרטים לחישוב הפרמיה</CardDescription>
+      <Card className="shadow-2xl">
+        <CardHeader className="bg-gradient-to-l from-primary/5 to-secondary/5">
+          <CardTitle className="text-3xl font-bold">🏇 מחשבון ביטוח מדריכי רכיבה</CardTitle>
+          <CardDescription className="text-lg">בחר את סוגי הכיסויים למדריכים</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8 p-8">
           {/* חבות מקצועית */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">ביטוח אחריות מקצועית</Label>
-            <RadioGroup value={professionalLiability} onValueChange={setProfessionalLiability}>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="yes" id="prof-yes" />
-                <Label htmlFor="prof-yes" className="cursor-pointer">כן</Label>
+          <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+            <Label className="text-xl font-bold text-primary block">📋 ביטוח אחריות מקצועית</Label>
+            <RadioGroup value={professionalLiability} onValueChange={setProfessionalLiability} className="grid grid-cols-2 gap-4">
+              <div className={`relative cursor-pointer transition-all duration-300 ${professionalLiability === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="yes" id="prof-yes" className="peer sr-only" />
+                <Label htmlFor="prof-yes" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                  כן ✓
+                </Label>
               </div>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="no" id="prof-no" />
-                <Label htmlFor="prof-no" className="cursor-pointer">לא</Label>
+              <div className={`relative cursor-pointer transition-all duration-300 ${professionalLiability === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="no" id="prof-no" className="peer sr-only" />
+                <Label htmlFor="prof-no" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
+                  לא ✗
+                </Label>
               </div>
             </RadioGroup>
           </div>
