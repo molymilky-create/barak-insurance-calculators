@@ -182,132 +182,176 @@ const LawsDatabase = () => {
   };
 
   return (
-    <div className="bg-muted/30 py-12" dir="rtl">
+    <div className="bg-gradient-to-br from-muted/30 to-muted/10 py-16" dir="rtl">
       <div className="container mx-auto px-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <FileText className="h-6 w-6" />
-              מאגר חוקים וחוזרים
-            </CardTitle>
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                לשימוש פנימי בלבד – לא במקום עיון במקור הרשמי
+        <Card className="shadow-2xl border-2">
+          <CardHeader className="bg-gradient-to-l from-primary/5 to-secondary/5 border-b-2">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 bg-primary/10 rounded-xl">
+                <FileText className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-3xl font-bold text-primary">מאגר חוקים וחוזרים</CardTitle>
+                <p className="text-muted-foreground text-base mt-1">מערכת חיפוש מתקדמת במסמכי רגולציה</p>
+              </div>
+            </div>
+            <Alert className="border-2 border-primary/20 bg-primary/5">
+              <AlertCircle className="h-5 w-5 text-primary" />
+              <AlertDescription className="text-base">
+                <strong>לתשומת לבכם:</strong> לשימוש פנימי בלבד – אין להסתמך במקום עיון במקור הרשמי
               </AlertDescription>
             </Alert>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* פילטרים */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="search-text">חיפוש חופשי</Label>
-                <Input
-                  id="search-text"
-                  placeholder="חפש בכותרת או תיאור..."
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  className="text-right"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="type-filter">סוג</Label>
-                <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger id="type-filter">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">כל הסוגים</SelectItem>
-                    <SelectItem value="חוק">חוק</SelectItem>
-                    <SelectItem value="חוזר">חוזר</SelectItem>
-                    <SelectItem value="תקנות">תקנות</SelectItem>
-                    <SelectItem value="הנחיה">הנחיה</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="audience-filter">קהל יעד</Label>
-                <Select value={audienceFilter} onValueChange={setAudienceFilter}>
-                  <SelectTrigger id="audience-filter">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">כל</SelectItem>
-                    <SelectItem value="כללי">כללי</SelectItem>
-                    <SelectItem value="סוכן/יועץ">סוכן/יועץ</SelectItem>
-                    <SelectItem value="גוף מוסדי">גוף מוסדי</SelectItem>
-                    <SelectItem value="נותן שירותים פיננסיים">נותן שירותים פיננסיים</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="year-filter">שנה</Label>
-                <Input
-                  id="year-filter"
-                  type="number"
-                  placeholder="לדוגמה: 2020"
-                  value={yearFilter}
-                  onChange={(e) => setYearFilter(e.target.value)}
-                  className="text-right"
-                />
+          
+          <CardContent className="space-y-8 p-8">
+            {/* Search and Filters Section */}
+            <div className="space-y-6">
+              <div className="p-6 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl border-2 border-primary/20">
+                <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                  🔍 חיפוש ופילטרים
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="search-text" className="font-semibold text-base">חיפוש חופשי</Label>
+                    <Input
+                      id="search-text"
+                      placeholder="חפש בכותרת, תיאור או תחום..."
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      className="text-right h-12 text-base border-2 focus:border-primary"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="type-filter" className="font-semibold text-base">סוג מסמך</Label>
+                    <Select value={typeFilter} onValueChange={setTypeFilter}>
+                      <SelectTrigger id="type-filter" className="h-12 text-base border-2">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white z-50">
+                        <SelectItem value="all">כל הסוגים</SelectItem>
+                        <SelectItem value="חוק">חוק</SelectItem>
+                        <SelectItem value="חוזר">חוזר</SelectItem>
+                        <SelectItem value="תקנות">תקנות</SelectItem>
+                        <SelectItem value="הנחיה">הנחיה</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="audience-filter" className="font-semibold text-base">קהל יעד</Label>
+                    <Select value={audienceFilter} onValueChange={setAudienceFilter}>
+                      <SelectTrigger id="audience-filter" className="h-12 text-base border-2">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white z-50">
+                        <SelectItem value="all">כל הקהלים</SelectItem>
+                        <SelectItem value="כללי">כללי</SelectItem>
+                        <SelectItem value="סוכן/יועץ">סוכן/יועץ</SelectItem>
+                        <SelectItem value="גוף מוסדי">גוף מוסדי</SelectItem>
+                        <SelectItem value="נותן שירותים פיננסיים">נותן שירותים פיננסיים</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="year-filter" className="font-semibold text-base">שנה</Label>
+                    <Input
+                      id="year-filter"
+                      type="number"
+                      placeholder="לדוגמה: 2020"
+                      value={yearFilter}
+                      onChange={(e) => setYearFilter(e.target.value)}
+                      className="text-right h-12 text-base border-2 focus:border-primary"
+                    />
+                  </div>
+                </div>
+                
+                {/* Results Counter */}
+                <div className="mt-4 pt-4 border-t-2 border-primary/20">
+                  <p className="text-base font-semibold text-primary">
+                    נמצאו {filteredLaws.length} תוצאות מתוך {lawsData.length} מסמכים
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* תוצאות */}
-            <div className="space-y-4 mt-6">
+            {/* Results Section */}
+            <div className="space-y-5">
+              <h3 className="text-2xl font-bold text-primary border-b-2 border-primary/20 pb-3">
+                תוצאות חיפוש
+              </h3>
+              
               {filteredLaws.length === 0 ? (
-                <Alert>
-                  <AlertDescription className="text-center py-8">
+                <Alert className="border-2 border-muted animate-fade-in">
+                  <AlertCircle className="h-5 w-5" />
+                  <AlertDescription className="text-center py-12 text-lg">
+                    <div className="text-4xl mb-4">🔍</div>
                     לא נמצאו תוצאות המתאימות לחיפוש
+                    <div className="text-sm text-muted-foreground mt-2">נסה לשנות את הפילטרים או את מילות החיפוש</div>
                   </AlertDescription>
                 </Alert>
               ) : (
-                filteredLaws.map(law => (
-                  <Card key={law.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="pt-6">
-                      <div className="space-y-3">
-                        <div className="flex flex-wrap gap-2">
-                          <Badge className={getTypeBadgeColor(law.kind)}>
-                            {law.kind}
-                          </Badge>
-                          <Badge variant="outline">
-                            {law.audience}
-                          </Badge>
-                          {law.code && (
-                            <Badge variant="secondary">
-                              {law.code}
+                <div className="grid gap-5">
+                  {filteredLaws.map((law, index) => (
+                    <Card 
+                      key={law.id} 
+                      className="hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-2 hover:border-primary/50 animate-fade-in hover-scale"
+                      style={{ animationDelay: `${index * 0.05}s` }}
+                    >
+                      <CardContent className="p-6">
+                        <div className="space-y-4">
+                          {/* Badges Row */}
+                          <div className="flex flex-wrap gap-2">
+                            <Badge className={`${getTypeBadgeColor(law.kind)} text-base px-4 py-1.5 font-bold shadow-sm`}>
+                              {law.kind}
                             </Badge>
-                          )}
-                          <Badge variant="outline">
-                            {law.year}
-                          </Badge>
+                            <Badge variant="outline" className="text-base px-4 py-1.5 font-semibold border-2">
+                              👥 {law.audience}
+                            </Badge>
+                            {law.code && (
+                              <Badge className="bg-secondary/20 text-secondary-foreground border-2 border-secondary text-base px-4 py-1.5 font-semibold">
+                                📋 {law.code}
+                              </Badge>
+                            )}
+                            <Badge variant="outline" className="text-base px-4 py-1.5 font-semibold border-2">
+                              📅 {law.year}
+                            </Badge>
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="text-xl font-bold text-foreground leading-relaxed">
+                            {law.title}
+                          </h3>
+                          
+                          {/* Area */}
+                          <div className="inline-block px-4 py-2 bg-muted/50 rounded-lg border-2 border-muted">
+                            <span className="text-sm font-bold text-primary">תחום: </span>
+                            <span className="text-sm font-medium text-muted-foreground">{law.area}</span>
+                          </div>
+                          
+                          {/* Summary */}
+                          <p className="text-base text-muted-foreground leading-relaxed bg-muted/30 p-4 rounded-xl border-2 border-muted/50">
+                            {law.shortSummary}
+                          </p>
+                          
+                          {/* Action Button */}
+                          <Button 
+                            variant="default" 
+                            size="lg" 
+                            className="w-full bg-gradient-to-l from-primary to-secondary hover:from-secondary hover:to-primary text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300" 
+                            asChild
+                          >
+                            <a href={law.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                              <ExternalLink className="h-5 w-5" />
+                              פתיחת מסמך רשמי באתר הרשות
+                            </a>
+                          </Button>
                         </div>
-                        
-                        <h3 className="text-lg font-semibold text-foreground">
-                          {law.title}
-                        </h3>
-                        
-                        <div className="text-xs text-muted-foreground font-medium mb-1">
-                          {law.area}
-                        </div>
-                        
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {law.shortSummary}
-                        </p>
-                        
-                        <Button variant="outline" size="sm" asChild>
-                          <a href={law.link} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="ml-2 h-4 w-4" />
-                            פתיחת מסמך רשמי
-                          </a>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               )}
             </div>
           </CardContent>
