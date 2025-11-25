@@ -7,11 +7,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowRight } from 'lucide-react';
 
-interface HorseCalculatorProps {
-  onBack: () => void;
-}
-
-const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
+const HorseCalculator = () => {
   // State for inputs
   const [thirdParty, setThirdParty] = useState<'yes' | 'no'>('no');
   const [thirdPartyType, setThirdPartyType] = useState<'pleasure' | 'competition'>('pleasure');
@@ -109,15 +105,6 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
 
   return (
     <main className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl" id="main-content" role="main" aria-label="מחשבון ביטוח סוסים">
-      <Button 
-        variant="outline" 
-        onClick={onBack} 
-        className="mb-6 hover-scale focus:ring-4 focus:ring-primary/50 focus:outline-none"
-        aria-label="חזרה למסך בחירת מחשבונים"
-      >
-        <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-        חזרה למסך בחירה
-      </Button>
 
       <Card className="shadow-2xl">
         <CardHeader className="bg-gradient-to-l from-primary/5 to-secondary/5">

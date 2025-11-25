@@ -6,13 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowRight } from 'lucide-react';
-import CompanyBadge from './CompanyBadge';
+import CompanyBadge from '../components/CompanyBadge';
 
-interface TrainerCalculatorProps {
-  onBack: () => void;
-}
-
-const TrainerCalculator = ({ onBack }: TrainerCalculatorProps) => {
+const TrainerCalculator = () => {
   const [company, setCompany] = useState<'menora' | 'hachshara'>('hachshara');
   const [trainerType, setTrainerType] = useState<'fitness' | 'martial-arts'>('fitness');
   const [liabilityLimit, setLiabilityLimit] = useState<500000 | 750000 | 1000000 | 1500000 | 2000000 | 3000000>(500000);
@@ -67,14 +63,6 @@ const TrainerCalculator = ({ onBack }: TrainerCalculatorProps) => {
   return (
     <main className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <Button
-          variant="outline"
-          onClick={onBack}
-          className="mb-6 text-lg"
-          aria-label="חזרה למסך הבחירה"
-        >
-          ← חזרה למסך הבחירה
-        </Button>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -140,10 +128,9 @@ const TrainerCalculator = ({ onBack }: TrainerCalculatorProps) => {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <CompanyBadge 
-                    company={company} 
-                    productName={company === 'menora' ? 'Top Sport' : 'מסלול UP'} 
-                  />
+                  <div className="text-center text-sm text-slate-600">
+                    חברה: {company === 'menora' ? 'מנורה (Top Sport)' : 'הכשרה (מסלול UP)'}
+                  </div>
                 </motion.div>
               </AnimatePresence>
 
