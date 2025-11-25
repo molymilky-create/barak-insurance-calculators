@@ -87,6 +87,23 @@ All colors MUST be HSL.
   }
 }
 
+/* Insurance company theme colors */
+@layer base {
+  :root {
+    /* Menora colors - yellow/purple theme */
+    --menora-primary: 48 95% 53%;
+    --menora-secondary: 42 91% 47%;
+    --menora-dark: 0 0% 24%;
+    --menora-bg: 48 100% 95%;
+    
+    /* Hachshara colors - red/blue theme */
+    --hachshara-primary: 0 85% 55%;
+    --hachshara-secondary: 0 80% 48%;
+    --hachshara-light: 0 0% 55%;
+    --hachshara-bg: 0 100% 97%;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

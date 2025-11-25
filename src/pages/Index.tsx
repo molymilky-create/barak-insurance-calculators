@@ -4,12 +4,14 @@ import CalculatorCard from '@/components/CalculatorCard';
 import HorseCalculator from '@/components/HorseCalculator';
 import FarmCalculator from '@/components/FarmCalculator';
 import InstructorCalculator from '@/components/InstructorCalculator';
+import TrainerCalculator from '@/components/TrainerCalculator';
 import LawsDatabase from '@/components/LawsDatabase';
 import horseImage from '@/assets/horse.jpg';
 import farmImage from '@/assets/farm.jpg';
 import instructorImage from '@/assets/instructor.jpg';
+import trainerImage from '@/assets/trainer.jpg';
 
-type CalculatorType = 'horse' | 'farm' | 'instructor' | null;
+type CalculatorType = 'horse' | 'farm' | 'instructor' | 'trainer' | null;
 
 const Index = () => {
   const [selectedCalculator, setSelectedCalculator] = useState<CalculatorType>(null);
@@ -73,11 +75,21 @@ const Index = () => {
                   onSelect={() => setSelectedCalculator('instructor')}
                 />
               </div>
+              
+              <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                <CalculatorCard
+                  title="מאמני כושר ואומנויות לחימה"
+                  description="ביטוח אחריות צד ג' + ביטול חריג אחריות מקצועית למאמני כושר ולחימה"
+                  icon="🏋️‍♂️"
+                  image={trainerImage}
+                  onSelect={() => setSelectedCalculator('trainer')}
+                />
+              </div>
             </section>
           </main>
 
           {/* מודול חוקים וחוזרים */}
-          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <LawsDatabase />
           </div>
         </>
@@ -91,6 +103,9 @@ const Index = () => {
           )}
           {selectedCalculator === 'instructor' && (
             <InstructorCalculator onBack={() => setSelectedCalculator(null)} />
+          )}
+          {selectedCalculator === 'trainer' && (
+            <TrainerCalculator onBack={() => setSelectedCalculator(null)} />
           )}
         </>
       )}

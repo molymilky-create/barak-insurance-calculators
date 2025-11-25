@@ -63,6 +63,18 @@ export default {
         },
         'barak-blue': "hsl(197, 89%, 37%)",
         'barak-orange': "hsl(30, 92%, 60%)",
+        'menora': {
+          primary: "hsl(var(--menora-primary))",
+          secondary: "hsl(var(--menora-secondary))",
+          dark: "hsl(var(--menora-dark))",
+          bg: "hsl(var(--menora-bg))",
+        },
+        'hachshara': {
+          primary: "hsl(var(--hachshara-primary))",
+          secondary: "hsl(var(--hachshara-secondary))",
+          light: "hsl(var(--hachshara-light))",
+          bg: "hsl(var(--hachshara-bg))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
