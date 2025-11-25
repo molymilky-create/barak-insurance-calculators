@@ -107,9 +107,14 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
   }, [startDate, endDate, annualPremium]);
 
   return (
-    <div className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl">
-      <Button variant="outline" onClick={onBack} className="mb-6 hover-scale">
-        <ArrowRight className="ml-2 h-4 w-4" />
+    <main className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl" id="main-content" role="main" aria-label="מחשבון ביטוח סוסים">
+      <Button 
+        variant="outline" 
+        onClick={onBack} 
+        className="mb-6 hover-scale focus:ring-4 focus:ring-primary/50 focus:outline-none"
+        aria-label="חזרה למסך בחירת מחשבונים"
+      >
+        <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
         חזרה למסך בחירה
       </Button>
 
@@ -120,9 +125,14 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
         </CardHeader>
         <CardContent className="space-y-8 p-8">
           {/* Third Party Insurance */}
-          <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
-            <Label className="text-xl font-bold text-primary block">⚖️ ביטוח צד ג'</Label>
-            <RadioGroup value={thirdParty} onValueChange={(v) => setThirdParty(v as 'yes' | 'no')} className="grid grid-cols-2 gap-4">
+          <fieldset className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+            <legend className="text-xl font-bold text-primary block"><span role="img" aria-label="מאזניים">⚖️</span> ביטוח צד ג'</legend>
+            <RadioGroup 
+              value={thirdParty} 
+              onValueChange={(v) => setThirdParty(v as 'yes' | 'no')} 
+              className="grid grid-cols-2 gap-4"
+              aria-label="בחר האם לכלול ביטוח צד ג'"
+            >
               <div className={`relative cursor-pointer transition-all duration-300 ${thirdParty === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
                 <RadioGroupItem value="yes" id="tp-yes" className="peer sr-only" />
                 <Label htmlFor="tp-yes" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
@@ -140,7 +150,12 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
             {thirdParty === 'yes' && (
               <div className="space-y-3 mt-4 animate-fade-in">
                 <Label className="text-lg font-semibold">למה משמש הסוס?</Label>
-                <RadioGroup value={thirdPartyType} onValueChange={(v) => setThirdPartyType(v as 'pleasure' | 'competition')} className="space-y-3">
+                <RadioGroup 
+                  value={thirdPartyType} 
+                  onValueChange={(v) => setThirdPartyType(v as 'pleasure' | 'competition')} 
+                  className="space-y-3"
+                  aria-label="בחר למה משמש הסוס"
+                >
                   <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
                     <div className="flex items-center gap-3">
                       <RadioGroupItem value="pleasure" id="tp-pleasure" />
@@ -158,12 +173,17 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                 </RadioGroup>
               </div>
             )}
-          </div>
+          </fieldset>
 
           {/* Life Insurance */}
-          <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
-            <Label className="text-xl font-bold text-primary block">🐴 ביטוח חיים</Label>
-            <RadioGroup value={lifeInsurance} onValueChange={(v) => setLifeInsurance(v as 'yes' | 'no')} className="grid grid-cols-2 gap-4">
+          <fieldset className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+            <legend className="text-xl font-bold text-primary block"><span role="img" aria-label="סוס">🐴</span> ביטוח חיים</legend>
+            <RadioGroup 
+              value={lifeInsurance} 
+              onValueChange={(v) => setLifeInsurance(v as 'yes' | 'no')} 
+              className="grid grid-cols-2 gap-4"
+              aria-label="בחר האם לכלול ביטוח חיים"
+            >
               <div className={`relative cursor-pointer transition-all duration-300 ${lifeInsurance === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
                 <RadioGroupItem value="yes" id="life-yes" className="peer sr-only" />
                 <Label htmlFor="life-yes" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
@@ -189,12 +209,20 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                     onChange={(e) => setHorseValue(e.target.value)}
                     className="text-right text-xl h-14"
                     placeholder="0"
+                    aria-label="הזן את ערך הסוס בשקלים"
+                    aria-describedby="horse-value-desc"
                   />
+                  <span id="horse-value-desc" className="sr-only">הזן את ערך הסוס בשקלים חדשים</span>
                 </div>
                 
                 <div>
                   <Label className="text-lg font-semibold mb-3 block">סוג הסוס</Label>
-                  <RadioGroup value={horseType} onValueChange={(v) => setHorseType(v as 'pleasure' | 'jumping' | 'western')} className="space-y-3">
+                  <RadioGroup 
+                    value={horseType} 
+                    onValueChange={(v) => setHorseType(v as 'pleasure' | 'jumping' | 'western')} 
+                    className="space-y-3"
+                    aria-label="בחר סוג הסוס"
+                  >
                     <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
                       <div className="flex items-center gap-3">
                         <RadioGroupItem value="pleasure" id="type-pleasure" />
@@ -222,7 +250,12 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                 <div className="p-4 bg-background rounded-xl border-2">
                   <Label className="text-lg font-semibold mb-3 block">🔒 כיסוי פריצה/גניבה</Label>
                   <p className="text-sm text-muted-foreground mb-3">ללא כיסוי זה תקבל הנחה של 10%</p>
-                  <RadioGroup value={theftCoverage} onValueChange={(v) => setTheftCoverage(v as 'yes' | 'no')} className="grid grid-cols-2 gap-4">
+                  <RadioGroup 
+                    value={theftCoverage} 
+                    onValueChange={(v) => setTheftCoverage(v as 'yes' | 'no')} 
+                    className="grid grid-cols-2 gap-4"
+                    aria-label="בחר האם לכלול כיסוי פריצה וגניבה"
+                  >
                     <div>
                       <RadioGroupItem value="yes" id="theft-yes" className="peer sr-only" />
                       <Label htmlFor="theft-yes" className="flex items-center justify-center h-16 text-xl font-bold rounded-xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=unchecked]:border-border hover:border-primary/50">
@@ -334,7 +367,7 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
           </Button>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 };
 

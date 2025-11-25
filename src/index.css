@@ -97,6 +97,48 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
     font-family: 'Heebo', sans-serif;
   }
+  
+  /* Focus visible styles for better keyboard navigation */
+  *:focus-visible {
+    @apply outline-none ring-4 ring-primary/50 ring-offset-2 ring-offset-background;
+  }
+  
+  /* Skip link for keyboard accessibility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .focus\:not-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+  
+  /* Enhanced button focus states */
+  button:focus-visible,
+  a:focus-visible {
+    @apply ring-4 ring-primary/60 ring-offset-2;
+  }
+  
+  /* Input focus states */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply ring-4 ring-primary/40 border-primary;
+  }
 }
 
 @layer utilities {
