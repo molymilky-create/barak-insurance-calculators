@@ -207,9 +207,14 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
   }, [startDate, endDate, annualPremium]);
 
   return (
-    <div className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl">
-      <Button variant="outline" onClick={onBack} className="mb-6 hover-scale">
-        <ArrowRight className="ml-2 h-4 w-4" />
+    <main className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl" id="main-content" role="main" aria-label="מחשבון ביטוח חוות סוסים">
+      <Button 
+        variant="outline" 
+        onClick={onBack} 
+        className="mb-6 hover-scale focus:ring-4 focus:ring-primary/50 focus:outline-none"
+        aria-label="חזרה למסך בחירת מחשבונים"
+      >
+        <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
         חזרה למסך בחירה
       </Button>
 
@@ -642,7 +647,7 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
           </Button>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 };
 
