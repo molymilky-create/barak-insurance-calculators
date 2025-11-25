@@ -10,66 +10,143 @@ import { AlertCircle, ExternalLink, FileText } from 'lucide-react';
 
 interface Law {
   id: string;
-  type: 'חוק' | 'חוזר' | 'תקנות' | 'הנחיה';
+  kind: 'חוק' | 'חוזר' | 'תקנות' | 'הנחיה';
   audience: 'כללי' | 'סוכן/יועץ' | 'גוף מוסדי' | 'נותן שירותים פיננסיים';
   code?: string;
   year: number;
   title: string;
-  description: string;
+  area: string;
+  shortSummary: string;
   link: string;
 }
 
-// נתוני לדוגמה - יש להחליף ברשימה המלאה שלך
 const lawsData: Law[] = [
+  // חוקים
   {
-    id: '1',
-    type: 'חוק',
-    audience: 'כללי',
-    code: 'חוק הפיקוח',
+    id: "law-insurance-contract-1981",
+    kind: "חוק",
+    audience: "כללי",
+    code: "חוק חוזה הביטוח",
+    title: 'חוק חוזה הביטוח, תשמ"א-1981',
     year: 1981,
-    title: 'חוק הפיקוח על שירותים פיננסיים (ביטוח), התשמ"א-1981',
-    description: 'חוק זה קובע את המסגרת הרגולטורית להפיקוח על שירותי ביטוח בישראל, כולל רישוי, דרישות הון וניהול סיכונים.',
-    link: 'https://www.nevo.co.il/law_html/law01/999_001.htm',
+    area: "ביטוח כללי / חיים / בריאות",
+    shortSummary:
+      "המסגרת העיקרית ליחסים בין מבטח למבוטח: כריתת חוזה, חובת גילוי, אי־התאמה, תרמית, תשלום תגמולים, התיישנות ועוד.",
+    link: "https://www.nevo.co.il/law_html/law00/71902.htm"
   },
   {
-    id: '2',
-    type: 'חוזר',
-    audience: 'סוכן/יועץ',
-    code: 'חוזר גמל 2020-9-11',
-    year: 2020,
-    title: 'חוזר גופים מוסדיים: תקשורת עם מבוטח בדרכים אלקטרוניות',
-    description: 'החוזר קובע כללים לתקשורת דיגיטלית בין חברות ביטוח למבוטחים, כולל דרישות אבטחת מידע והסכמת הלקוח.',
-    link: 'https://www.gov.il/he/departments/policies/2020-9-11',
+    id: "law-supervision-insurance-1981",
+    kind: "חוק",
+    audience: "כללי",
+    code: "חוק הפיקוח על הביטוח",
+    title: 'חוק הפיקוח על שירותים פיננסיים (ביטוח), תשמ"א-1981',
+    year: 1981,
+    area: "פיקוח על חברות ביטוח וסוכנים",
+    shortSummary:
+      "מסדיר את הפיקוח על ענף הביטוח: רישוי, הוראות פיקוח, סמכויות הממונה, הוראות לציבור, חוזרים ועוד.",
+    link: "https://www.nevo.co.il/law_html/law00/4643.htm"
   },
   {
-    id: '3',
-    type: 'תקנות',
-    audience: 'גוף מוסדי',
-    code: 'תקנות ביטוח',
+    id: "law-supervision-provident-funds-2005",
+    kind: "חוק",
+    audience: "כללי",
+    code: "חוק הפיקוח על קופות גמל",
+    title: 'חוק הפיקוח על שירותים פיננסיים (קופות גמל), תשס"ה-2005',
+    year: 2005,
+    area: "חיסכון פנסיוני / קופות גמל",
+    shortSummary:
+      "מסגרת הפיקוח על קופות גמל וקרנות השתלמות: רישוי גופים מוסדיים, ניהול כספי חוסכים, דוחות, ממשל תאגידי.",
+    link: "https://www.nevo.co.il/law_html/law01/999_470.htm"
+  },
+  {
+    id: "law-supervision-pension-advice-2005",
+    kind: "חוק",
+    audience: "סוכן/יועץ",
+    code: "חוק הייעוץ והשיווק הפנסיוני",
+    title:
+      'חוק הפיקוח על שירותים פיננסיים (ייעוץ, שיווק ומערכת סליקה פנסיוניים), תשס"ה-2005',
+    year: 2005,
+    area: "פנסיה / ייעוץ ושיווק",
+    shortSummary:
+      "מסדיר רישוי יועצים וסוכני שיווק פנסיוניים, חובות נאמנות וזהירות, הפרדה בין ייעוץ לשיווק ועוד.",
+    link: "https://www.nevo.co.il/law_html/law00/73928.htm"
+  },
+  {
+    id: "law-supervised-financial-services-2016",
+    kind: "חוק",
+    audience: "נותן שירותים פיננסיים",
+    code: "חוק שירותים פיננסיים מוסדרים",
+    title:
+      'חוק הפיקוח על שירותים פיננסיים (שירותים פיננסיים מוסדרים), תשע"ו-2016',
+    year: 2016,
+    area: "שירותים פיננסיים חוץ־בנקאיים",
+    shortSummary:
+      "מסדיר רישוי ופיקוח על נותני שירותים פיננסיים (אשראי, אשראי חוץ־בנקאי וכו'), סמכויות המפקח וחובות הדיווח.",
+    link: "https://www.nevo.co.il/law_html/law01/501_439.htm"
+  },
+
+  // חוזרים
+  {
+    id: "circular-insurance-2016-1-7-join",
+    kind: "חוזר",
+    audience: "סוכן/יועץ",
+    code: "2016-1-7",
+    title: "חוזר ביטוח 2016-1-7 – צירוף לביטוח",
+    year: 2016,
+    area: "ביטוח כללי / בריאות / חיים",
+    shortSummary:
+      "מסדיר את דרך צירוף מבוטח לביטוח: איסוף מידע רפואי, שאלון בריאות, מסירת הסברים, תיעוד שיחה/פגישה ועוד.",
+    link: "https://www.menoramivt.co.il/general/join-insurance"
+  },
+  {
+    id: "circular-insurance-2022-1-15-online-interface",
+    kind: "חוזר",
+    audience: "סוכן/יועץ",
+    code: "2022-1-15",
+    title: "חוזר ביטוח 2022-1-15 – ממשק אינטרנטי לאיתור מוצרי ביטוח",
+    year: 2022,
+    area: "ביטוח כללי / בריאות / חובות סוכן",
+    shortSummary:
+      "קובע הוראות לממשק אינטרנטי שבו סוכן יכול לאתר מוצרי ביטוח והסדר הרשאות 'מורשי צפייה' לעובדי הסוכנות.",
+    link: "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/notice-2023-1-3/he/regulation_%202023-1-3_final_word.docx"
+  },
+  {
+    id: "circular-agents-2012-10-4-service-to-clients",
+    kind: "חוזר",
+    audience: "סוכן/יועץ",
+    code: "2012-10-4",
+    title: "חוזר סוכנים ויועצים 2012-10-4 – שירות ללקוחות סוכנים ויועצים",
     year: 2012,
-    title: 'תקנות הפיקוח על שירותים פיננסיים (ביטוח) (דרכי השקעה), התשע"ב-2012',
-    description: 'תקנות המסדירות את דרכי ההשקעה המותרות לחברות ביטוח, כולל מגבלות על סוגי נכסים ורמות פיזור.',
-    link: 'https://www.nevo.co.il/law_html/law01/501_001.htm',
+    area: "שירות לקוחות / התנהלות סוכן",
+    shortSummary:
+      "אמנת שירות לסוכנים ויועצים: חובת רמת שירות נאותה, זמינות, טיפול בתביעות, תיעוד פניות ועוד (עודכן ב-2022-10-10).",
+    link: "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/regulation-1708/he/regulation_2012-10-4.doc"
   },
   {
-    id: '4',
-    type: 'הנחיה',
-    audience: 'סוכן/יועץ',
-    year: 2019,
-    title: 'הנחיה בנושא חובת גילוי מלא במכירת פוליסות ביטוח',
-    description: 'הנחיה המפרטת את חובות הגילוי של סוכני ביטוח ויועצי השקעות כלפי לקוחות, כולל גילוי עמלות וניגודי עניינים.',
-    link: 'https://www.gov.il/he/departments/policies/disclosure-2019',
+    id: "circular-agents-2022-10-10-service-to-clients-update",
+    kind: "חוזר",
+    audience: "סוכן/יועץ",
+    code: "2022-10-10",
+    title: "חוזר שירות ללקוחות סוכנים ויועצים – תיקון (2022-10-10)",
+    year: 2022,
+    area: "שירות לקוחות / התנהלות סוכן",
+    shortSummary:
+      "מעדכן את אמנת השירות לסוכנים ויועצים, כולל חיזוק חובות שירות, זמני מענה וחובת תיעוד.",
+    link: "https://www.nevo.co.il/FilesFolderPermalink.aspx?b=files&r=הנחיות, הוראות וחוזרים\\חוזרי שוק ההון ביטוח וחיסכון\\חוזרי סוכנים ויועצים\\2022"
   },
   {
-    id: '5',
-    type: 'חוזר',
-    audience: 'נותן שירותים פיננסיים',
-    code: 'חוזר ביטוח 2021-5-8',
+    id: "circular-institutions-2021-9-5-pension-join",
+    kind: "חוזר",
+    audience: "גוף מוסדי",
+    code: "2021-9-5",
+    title:
+      "חוזר גופים מוסדיים 2021-9-5 – הצטרפות לקרן פנסיה או לקופת גמל (תיקון)",
     year: 2021,
-    title: 'ביטוח אחריות מקצועית לנותני שירותים פיננסיים',
-    description: 'החוזר קובע דרישות לביטוח אחריות מקצועית עבור סוכני ביטוח ויועצי פנסיה, כולל סכומי כיסוי מינימליים.',
-    link: 'https://www.gov.il/he/departments/policies/2021-5-8',
-  },
+    area: "פנסיה / גופים מוסדיים",
+    shortSummary:
+      "קובע נוסח אחיד לטפסי הצטרפות לקרן פנסיה/קופת גמל וטפסי שינוי – לשיפור בהירות וזכויות העמית.",
+    link: "https://www.gov.il/he/pages/pension-provident-fund"
+  }
 ];
 
 const LawsDatabase = () => {
@@ -82,10 +159,11 @@ const LawsDatabase = () => {
     return lawsData.filter(law => {
       const matchesText = searchText === '' || 
         law.title.toLowerCase().includes(searchText.toLowerCase()) ||
-        law.description.toLowerCase().includes(searchText.toLowerCase()) ||
+        law.shortSummary.toLowerCase().includes(searchText.toLowerCase()) ||
+        law.area.toLowerCase().includes(searchText.toLowerCase()) ||
         (law.code && law.code.toLowerCase().includes(searchText.toLowerCase()));
       
-      const matchesType = typeFilter === 'all' || law.type === typeFilter;
+      const matchesType = typeFilter === 'all' || law.kind === typeFilter;
       const matchesAudience = audienceFilter === 'all' || law.audience === audienceFilter;
       const matchesYear = yearFilter === '' || law.year.toString() === yearFilter;
       
@@ -93,8 +171,8 @@ const LawsDatabase = () => {
     });
   }, [searchText, typeFilter, audienceFilter, yearFilter]);
 
-  const getTypeBadgeColor = (type: string) => {
-    switch (type) {
+  const getTypeBadgeColor = (kind: string) => {
+    switch (kind) {
       case 'חוק': return 'bg-primary text-primary-foreground';
       case 'חוזר': return 'bg-secondary text-secondary-foreground';
       case 'תקנות': return 'bg-accent text-accent-foreground';
@@ -192,8 +270,8 @@ const LawsDatabase = () => {
                     <CardContent className="pt-6">
                       <div className="space-y-3">
                         <div className="flex flex-wrap gap-2">
-                          <Badge className={getTypeBadgeColor(law.type)}>
-                            {law.type}
+                          <Badge className={getTypeBadgeColor(law.kind)}>
+                            {law.kind}
                           </Badge>
                           <Badge variant="outline">
                             {law.audience}
@@ -212,8 +290,12 @@ const LawsDatabase = () => {
                           {law.title}
                         </h3>
                         
+                        <div className="text-xs text-muted-foreground font-medium mb-1">
+                          {law.area}
+                        </div>
+                        
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          {law.description}
+                          {law.shortSummary}
                         </p>
                         
                         <Button variant="outline" size="sm" asChild>
