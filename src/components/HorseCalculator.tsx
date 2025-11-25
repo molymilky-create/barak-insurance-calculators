@@ -126,7 +126,12 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
         </CardHeader>
         <CardContent className="space-y-8 p-8">
           {/* Third Party Insurance */}
-          <fieldset className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+          <motion.fieldset
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+          >
             <legend className="text-xl font-bold text-primary block"><span role="img" aria-label="מאזניים">⚖️</span> ביטוח צד ג'</legend>
             <RadioGroup 
               value={thirdParty} 
@@ -182,10 +187,15 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </fieldset>
+          </motion.fieldset>
 
           {/* Life Insurance */}
-          <fieldset className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+          <motion.fieldset
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+          >
             <legend className="text-xl font-bold text-primary block"><span role="img" aria-label="סוס">🐴</span> ביטוח חיים</legend>
             <RadioGroup 
               value={lifeInsurance} 
@@ -288,11 +298,16 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                   </div>
                 </motion.div>
               )}
-            </AnimatePresence>
-          </fieldset>
+          </AnimatePresence>
+          </motion.fieldset>
 
           {/* Health Insurance */}
-          <fieldset className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+          <motion.fieldset
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+          >
             <legend className="text-xl font-bold text-primary block">🏥 ביטוח בריאות</legend>
             <p className="text-sm text-muted-foreground">
               {lifeInsurance === 'yes' ? 'עם ביטוח חיים: 700 ₪' : 'ללא ביטוח חיים: 1,200 ₪'}
@@ -311,7 +326,7 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                 </Label>
               </div>
             </RadioGroup>
-          </fieldset>
+          </motion.fieldset>
 
           {/* Annual Premium Summary */}
           <AnimatePresence>
