@@ -11,35 +11,93 @@ interface InstructorCalculatorProps {
 }
 
 const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
-  const [professionalLiability, setProfessionalLiability] = useState('no');
-  const [publicLiability, setPublicLiability] = useState('no');
-  const [numInstructors, setNumInstructors] = useState('0');
-  const [coverage, setCoverage] = useState('standard');
-  const [annualRevenue, setAnnualRevenue] = useState('0');
+  // בחירת חברה
+  const [company, setCompany] = useState<'menora' | 'hachshara'>('menora');
+  
+  // מנורה
+  const [policyType, setPolicyType] = useState<'professional' | 'thirdParty'>('professional');
+  const [liabilityLimit, setLiabilityLimit] = useState<1000000 | 2000000 | 3000000 | 4000000>(1000000);
+  const [includeThirdParty, setIncludeThirdParty] = useState<'no' | 'yes'>('no');
+  const [includeAdditionalInstructors, setIncludeAdditionalInstructors] = useState<'no' | 'yes'>('no');
+  const [numAdditionalInstructors, setNumAdditionalInstructors] = useState('0');
+  
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   
   const [annualPremium, setAnnualPremium] = useState(0);
   const [periodPremium, setPeriodPremium] = useState(0);
   const [days, setDays] = useState(0);
+  const [breakdown, setBreakdown] = useState<string[]>([]);
 
   const calculatePremium = () => {
+    let basePremium = 0;
     let total = 0;
-    const instructors = parseInt(numInstructors) || 0;
-    const revenue = parseInt(annualRevenue) || 0;
-    
-    // חישוב בסיסי - יש לעדכן עם הלוגיקה המדויקת שלך
-    if (professionalLiability === 'yes') {
-      total += instructors * 2500; // דוגמה
-      if (coverage === 'extended') total += instructors * 1000;
-    }
-    
-    if (publicLiability === 'yes') {
-      total += 2000; // בסיס
-      total += revenue * 0.001; // 0.1% מהמחזור
+    const details: string[] = [];
+
+    if (company === 'menora') {
+      if (policyType === 'professional') {
+        // אחריות מקצועית
+        const professionalPrices = {
+          1000000: { without: 2800, with: 4200 },
+          2000000: { without: 3500, with: 5250 },
+          4000000: { without: 5000, with: 7500 },
+        };
+        
+        const prices = professionalPrices[liabilityLimit as 1000000 | 2000000 | 4000000];
+        basePremium = includeThirdParty === 'yes' ? prices.with : prices.without;
+        total = basePremium;
+        
+        details.push(
+          `אחריות מקצועית ${(liabilityLimit / 1000000).toLocaleString('he-IL')}M ₪${
+            includeThirdParty === 'yes' ? ' + הרחבה לצד ג\'' : ''
+          }: ${basePremium.toLocaleString('he-IL')} ₪`
+        );
+      } else {
+        // צד ג'
+        const thirdPartyPrices = {
+          1000000: 4200,
+          2000000: 5250,
+          4000000: 7500,
+        };
+        
+        basePremium = thirdPartyPrices[liabilityLimit as 1000000 | 2000000 | 4000000];
+        total = basePremium;
+        
+        details.push(
+          `צד ג' ${(liabilityLimit / 1000000).toLocaleString('he-IL')}M ₪ + אחריות מקצועית ${(liabilityLimit / 2000000).toLocaleString('he-IL')}M ₪: ${basePremium.toLocaleString('he-IL')} ₪`
+        );
+      }
+      
+      // מדריכים נוספים
+      if (includeAdditionalInstructors === 'yes') {
+        const additionalCount = parseInt(numAdditionalInstructors) || 0;
+        if (additionalCount > 0) {
+          const additionalCost = Math.round(basePremium * 0.5 * additionalCount);
+          total += additionalCost;
+          details.push(
+            `${additionalCount} מדריכים נוספים (${additionalCount} × 50%): ${additionalCost.toLocaleString('he-IL')} ₪`
+          );
+        }
+      }
+    } else {
+      // הכשרה
+      const hachsharaPrices = {
+        1000000: 2500,
+        2000000: 2800,
+        3000000: 3500,
+        4000000: 4900,
+      };
+      
+      basePremium = hachsharaPrices[liabilityLimit];
+      total = basePremium;
+      
+      details.push(
+        `אחריות מקצועית + צד ג' ${(liabilityLimit / 1000000).toLocaleString('he-IL')}M ₪: ${basePremium.toLocaleString('he-IL')} ₪`
+      );
     }
     
     setAnnualPremium(Math.round(total));
+    setBreakdown(details);
   };
 
   const calculatePeriodPremium = () => {
@@ -64,7 +122,7 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
 
   useEffect(() => {
     calculatePremium();
-  }, [professionalLiability, publicLiability, numInstructors, coverage, annualRevenue]);
+  }, [company, policyType, liabilityLimit, includeThirdParty, includeAdditionalInstructors, numAdditionalInstructors]);
 
   useEffect(() => {
     calculatePeriodPremium();
@@ -83,138 +141,234 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
           <CardDescription className="text-lg">בחר את סוגי הכיסויים למדריכים</CardDescription>
         </CardHeader>
         <CardContent className="space-y-8 p-8">
-          {/* חבות מקצועית */}
+          {/* בחירת חברה */}
           <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
-            <Label className="text-xl font-bold text-primary block">📋 ביטוח אחריות מקצועית</Label>
-            <RadioGroup value={professionalLiability} onValueChange={setProfessionalLiability} className="grid grid-cols-2 gap-4">
-              <div className={`relative cursor-pointer transition-all duration-300 ${professionalLiability === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
-                <RadioGroupItem value="yes" id="prof-yes" className="peer sr-only" />
-                <Label htmlFor="prof-yes" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
-                  כן ✓
+            <Label className="text-xl font-bold text-primary block">🏢 חברת ביטוח</Label>
+            <RadioGroup value={company} onValueChange={(v) => setCompany(v as 'menora' | 'hachshara')} className="grid grid-cols-2 gap-4">
+              <div className={`relative cursor-pointer transition-all duration-300 ${company === 'menora' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="menora" id="company-menora" className="peer sr-only" />
+                <Label htmlFor="company-menora" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                  מנורה 🛡️
                 </Label>
               </div>
-              <div className={`relative cursor-pointer transition-all duration-300 ${professionalLiability === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
-                <RadioGroupItem value="no" id="prof-no" className="peer sr-only" />
-                <Label htmlFor="prof-no" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
-                  לא ✗
+              <div className={`relative cursor-pointer transition-all duration-300 ${company === 'hachshara' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="hachshara" id="company-hachshara" className="peer sr-only" />
+                <Label htmlFor="company-hachshara" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                  הכשרה 🏛️
                 </Label>
               </div>
             </RadioGroup>
           </div>
 
-          {/* מספר מדריכים */}
-          <div className="space-y-3">
-            <Label htmlFor="num-instructors" className="text-base font-semibold">מספר מדריכים</Label>
-            <Input
-              id="num-instructors"
-              type="number"
-              value={numInstructors}
-              onChange={(e) => setNumInstructors(e.target.value)}
-              className="text-right"
-            />
-          </div>
+          {company === 'menora' && (
+            <>
+              {/* סוג פוליסה - מנורה */}
+              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+                <Label className="text-xl font-bold text-primary block">📋 סוג פוליסה</Label>
+                <RadioGroup value={policyType} onValueChange={(v) => setPolicyType(v as 'professional' | 'thirdParty')} className="grid grid-cols-2 gap-4">
+                  <div className={`relative cursor-pointer transition-all duration-300 ${policyType === 'professional' ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="professional" id="type-professional" className="peer sr-only" />
+                    <Label htmlFor="type-professional" className="flex items-center justify-center h-20 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      אחריות מקצועית 👨‍🏫
+                    </Label>
+                  </div>
+                  <div className={`relative cursor-pointer transition-all duration-300 ${policyType === 'thirdParty' ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="thirdParty" id="type-thirdParty" className="peer sr-only" />
+                    <Label htmlFor="type-thirdParty" className="flex items-center justify-center h-20 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      צד ג' 🛡️
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
 
-          {/* רמת כיסוי */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">רמת כיסוי</Label>
-            <RadioGroup value={coverage} onValueChange={setCoverage}>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="standard" id="cov-standard" />
-                <Label htmlFor="cov-standard" className="cursor-pointer">סטנדרט (עד 1M ₪)</Label>
+              {/* גבול אחריות */}
+              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+                <Label className="text-xl font-bold text-primary block">💰 גבול אחריות</Label>
+                <RadioGroup 
+                  value={liabilityLimit.toString()} 
+                  onValueChange={(v) => setLiabilityLimit(parseInt(v) as 1000000 | 2000000 | 3000000 | 4000000)} 
+                  className="grid grid-cols-2 gap-4"
+                >
+                  <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 1000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="1000000" id="limit-1m" className="peer sr-only" />
+                    <Label htmlFor="limit-1m" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      1M ₪
+                    </Label>
+                  </div>
+                  <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 2000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="2000000" id="limit-2m" className="peer sr-only" />
+                    <Label htmlFor="limit-2m" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      2M ₪
+                    </Label>
+                  </div>
+                  {policyType === 'professional' && (
+                    <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 4000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                      <RadioGroupItem value="4000000" id="limit-4m" className="peer sr-only" />
+                      <Label htmlFor="limit-4m" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                        4M ₪
+                      </Label>
+                    </div>
+                  )}
+                  {policyType === 'thirdParty' && (
+                    <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 4000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                      <RadioGroupItem value="4000000" id="limit-4m-tp" className="peer sr-only" />
+                      <Label htmlFor="limit-4m-tp" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                        4M ₪
+                      </Label>
+                    </div>
+                  )}
+                </RadioGroup>
               </div>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="extended" id="cov-extended" />
-                <Label htmlFor="cov-extended" className="cursor-pointer">מורחב (עד 2M ₪)</Label>
-              </div>
-            </RadioGroup>
-          </div>
 
-          {/* חבות כלפי ציבור */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">ביטוח צד ג' (חבות כלפי הציבור)</Label>
-            <RadioGroup value={publicLiability} onValueChange={setPublicLiability}>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="yes" id="pub-yes" />
-                <Label htmlFor="pub-yes" className="cursor-pointer">כן</Label>
-              </div>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="no" id="pub-no" />
-                <Label htmlFor="pub-no" className="cursor-pointer">לא</Label>
-              </div>
-            </RadioGroup>
-          </div>
+              {/* הרחבה לצד ג' - רק לאחריות מקצועית */}
+              {policyType === 'professional' && (
+                <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+                  <Label className="text-xl font-bold text-primary block">➕ הרחבה לצד ג'</Label>
+                  <RadioGroup value={includeThirdParty} onValueChange={(v) => setIncludeThirdParty(v as 'yes' | 'no')} className="grid grid-cols-2 gap-4">
+                    <div className={`relative cursor-pointer transition-all duration-300 ${includeThirdParty === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
+                      <RadioGroupItem value="yes" id="tp-yes" className="peer sr-only" />
+                      <Label htmlFor="tp-yes" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                        כן ✓
+                      </Label>
+                    </div>
+                    <div className={`relative cursor-pointer transition-all duration-300 ${includeThirdParty === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
+                      <RadioGroupItem value="no" id="tp-no" className="peer sr-only" />
+                      <Label htmlFor="tp-no" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
+                        לא ✗
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
 
-          {/* מחזור שנתי */}
-          {publicLiability === 'yes' && (
-            <div className="space-y-3">
-              <Label htmlFor="annual-revenue" className="text-base font-semibold">מחזור שנתי משוער (₪)</Label>
-              <Input
-                id="annual-revenue"
-                type="number"
-                value={annualRevenue}
-                onChange={(e) => setAnnualRevenue(e.target.value)}
-                className="text-right"
-              />
-            </div>
+              {/* מדריכים נוספים */}
+              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+                <Label className="text-xl font-bold text-primary block">👥 מדריכים נוספים</Label>
+                <RadioGroup value={includeAdditionalInstructors} onValueChange={(v) => setIncludeAdditionalInstructors(v as 'yes' | 'no')} className="grid grid-cols-2 gap-4">
+                  <div className={`relative cursor-pointer transition-all duration-300 ${includeAdditionalInstructors === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="yes" id="add-instructors-yes" className="peer sr-only" />
+                    <Label htmlFor="add-instructors-yes" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      כן ✓
+                    </Label>
+                  </div>
+                  <div className={`relative cursor-pointer transition-all duration-300 ${includeAdditionalInstructors === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="no" id="add-instructors-no" className="peer sr-only" />
+                    <Label htmlFor="add-instructors-no" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
+                      לא ✗
+                    </Label>
+                  </div>
+                </RadioGroup>
+                
+                {includeAdditionalInstructors === 'yes' && (
+                  <div className="space-y-3 pt-4">
+                    <Label htmlFor="num-additional" className="text-base font-semibold">מספר מדריכים נוספים (כל מדריך = 50% מהבסיס)</Label>
+                    <Input
+                      id="num-additional"
+                      type="number"
+                      min="0"
+                      value={numAdditionalInstructors}
+                      onChange={(e) => setNumAdditionalInstructors(e.target.value)}
+                      className="text-right text-lg"
+                      placeholder="0"
+                    />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {company === 'hachshara' && (
+            <>
+              {/* גבול אחריות - הכשרה */}
+              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+                <Label className="text-xl font-bold text-primary block">💰 גבול אחריות (אחריות מקצועית + צד ג')</Label>
+                <RadioGroup 
+                  value={liabilityLimit.toString()} 
+                  onValueChange={(v) => setLiabilityLimit(parseInt(v) as 1000000 | 2000000 | 3000000 | 4000000)} 
+                  className="grid grid-cols-2 gap-4"
+                >
+                  <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 1000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="1000000" id="limit-h-1m" className="peer sr-only" />
+                    <Label htmlFor="limit-h-1m" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      1M ₪
+                    </Label>
+                  </div>
+                  <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 2000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="2000000" id="limit-h-2m" className="peer sr-only" />
+                    <Label htmlFor="limit-h-2m" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      2M ₪
+                    </Label>
+                  </div>
+                  <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 3000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="3000000" id="limit-h-3m" className="peer sr-only" />
+                    <Label htmlFor="limit-h-3m" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      3M ₪
+                    </Label>
+                  </div>
+                  <div className={`relative cursor-pointer transition-all duration-300 ${liabilityLimit === 4000000 ? 'scale-105' : 'hover:scale-102'}`}>
+                    <RadioGroupItem value="4000000" id="limit-h-4m" className="peer sr-only" />
+                    <Label htmlFor="limit-h-4m" className="flex items-center justify-center h-16 text-lg font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                      4M ₪
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </>
           )}
 
           {/* תוצאת חישוב שנתי */}
-          <Card className="bg-primary/5 border-primary">
+          <Card className="bg-gradient-to-l from-primary/10 to-secondary/10 border-primary shadow-lg">
             <CardHeader>
-              <CardTitle>סך הכל לתשלום (שנתי)</CardTitle>
+              <CardTitle className="text-2xl">💵 סך הכל לתשלום (שנתי)</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="text-3xl font-bold text-primary">
+            <CardContent className="space-y-4">
+              <div className="text-4xl font-bold text-primary">
                 {annualPremium.toLocaleString('he-IL')} ₪
               </div>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                {professionalLiability === 'yes' && (
-                  <div>
-                    • אחריות מקצועית ({numInstructors} מדריכים, כיסוי {coverage === 'extended' ? 'מורחב' : 'סטנדרט'}) – 
-                    {' '}{(parseInt(numInstructors) * 2500 + (coverage === 'extended' ? parseInt(numInstructors) * 1000 : 0)).toLocaleString('he-IL')} ₪
+              <div className="space-y-2 text-sm">
+                {breakdown.map((item, index) => (
+                  <div key={index} className="text-muted-foreground">
+                    • {item}
                   </div>
-                )}
-                {publicLiability === 'yes' && (
-                  <div>
-                    • ביטוח צד ג' – {(2000 + parseInt(annualRevenue) * 0.001).toLocaleString('he-IL')} ₪
-                  </div>
-                )}
+                ))}
               </div>
             </CardContent>
           </Card>
 
           {/* חישוב לפי תאריכים */}
           <div className="space-y-4 border-t pt-6">
-            <h3 className="text-lg font-semibold">חישוב לתקופה מסוימת</h3>
+            <h3 className="text-xl font-bold text-primary">📅 חישוב לתקופה מסוימת</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="start-date">תאריך תחילת ביטוח</Label>
+                <Label htmlFor="start-date" className="text-base font-semibold">תאריך תחילת ביטוח</Label>
                 <Input
                   id="start-date"
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
+                  className="text-lg"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="end-date">תאריך סיום ביטוח</Label>
+                <Label htmlFor="end-date" className="text-base font-semibold">תאריך סיום ביטוח</Label>
                 <Input
                   id="end-date"
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
+                  className="text-lg"
                 />
               </div>
             </div>
             
             {days > 0 && (
-              <Card className="bg-secondary/10 border-secondary">
+              <Card className="bg-gradient-to-l from-secondary/10 to-accent/10 border-secondary shadow-lg animate-scale-in">
                 <CardContent className="pt-6">
                   <div className="text-center space-y-2">
-                    <div className="text-xl font-semibold">
+                    <div className="text-2xl font-bold text-primary">
                       הפרמיה לתקופה שנבחרה: {periodPremium.toLocaleString('he-IL')} ₪
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-base text-muted-foreground">
                       ({days} ימים מתוך 365)
                     </div>
                   </div>
@@ -223,8 +377,8 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
             )}
           </div>
 
-          <Button className="w-full" size="lg">
-            המשך להזמנה
+          <Button className="w-full text-xl py-6" size="lg">
+            המשך להזמנה 🚀
           </Button>
         </CardContent>
       </Card>
