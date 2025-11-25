@@ -272,11 +272,11 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                 </div>
               </div>
             )}
-          </div>
+          </fieldset>
 
           {/* Health Insurance */}
-          <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
-            <Label className="text-xl font-bold text-primary block">🏥 ביטוח בריאות</Label>
+          <fieldset className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+            <legend className="text-xl font-bold text-primary block">🏥 ביטוח בריאות</legend>
             <p className="text-sm text-muted-foreground">
               {lifeInsurance === 'yes' ? 'עם ביטוח חיים: 700 ₪' : 'ללא ביטוח חיים: 1,200 ₪'}
             </p>
@@ -294,7 +294,7 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
                 </Label>
               </div>
             </RadioGroup>
-          </div>
+          </fieldset>
 
           {/* Annual Premium Summary */}
           {annualPremium > 0 && (
