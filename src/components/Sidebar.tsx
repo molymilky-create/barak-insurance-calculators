@@ -4,14 +4,14 @@ import logo from "@/assets/barak-logo.png";
 
 const navItemClasses = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition 
-   ${isActive ? "bg-primary text-white" : "text-slate-700 hover:bg-blue-50"}`;
+   ${isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"}`;
 
 const Sidebar = () => {
   const { isAdmin } = useAuth();
 
   return (
-    <aside className="w-64 bg-white border-l border-slate-200 flex flex-col">
-      <div className="p-4 border-b border-slate-200">
+    <aside className="w-64 bg-card border-l border-border flex flex-col">
+      <div className="p-4 border-b border-border">
         <div className="flex items-center gap-3">
           <img
             src={logo}
@@ -19,7 +19,7 @@ const Sidebar = () => {
             className="h-10 object-contain"
           />
         </div>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-muted-foreground">
           מערכת ניהול ומחשבוני ביטוח – ברק ביטוחים
         </p>
       </div>

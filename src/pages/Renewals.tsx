@@ -5,12 +5,12 @@ const Renewals = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">חידושים</h1>
-      <p className="text-sm text-slate-600">
+      <h1 className="text-2xl font-bold text-foreground">חידושים</h1>
+      <p className="text-sm text-muted-foreground">
         כאן תוכל/י לנהל חידושים של פוליסות קיימות – תזכורות, הצעות מחיר,
         טיפול בסטטוס ושיוך לעובדים.
       </p>
-      <div className="bg-white rounded-2xl shadow p-4">
+      <div className="bg-card rounded-2xl shadow p-4">
         <table className="w-full text-right text-sm">
           <thead>
             <tr className="border-b">

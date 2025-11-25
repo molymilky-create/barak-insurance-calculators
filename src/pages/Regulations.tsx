@@ -11,8 +11,8 @@ const Regulations = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">חוקים וחוזרים</h1>
-      <p className="text-sm text-slate-600">
+      <h1 className="text-2xl font-bold text-foreground">חוקים וחוזרים</h1>
+      <p className="text-sm text-muted-foreground">
         הנחיות רגולטוריות, חוקים, חוזרי המפקח על הביטוח ודירקטיבות נוספות.
       </p>
 
@@ -30,20 +30,20 @@ const Regulations = () => {
         {filtered.map((reg) => (
           <div
             key={reg.id}
-            className="bg-white rounded-2xl shadow p-4 hover:shadow-lg transition"
+            className="bg-card rounded-2xl shadow p-4 hover:shadow-lg transition"
           >
-            <div className="font-semibold text-slate-800">{reg.title}</div>
+            <div className="font-semibold text-foreground">{reg.title}</div>
             {reg.description && (
-              <p className="text-xs text-slate-600 mt-1">{reg.description}</p>
+              <p className="text-xs text-muted-foreground mt-1">{reg.description}</p>
             )}
-            <div className="text-xs text-slate-500 mt-2">
+            <div className="text-xs text-muted-foreground mt-2">
               תגיות: {reg.domainTags.join(", ")}
             </div>
             <a
               href={reg.fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-600 hover:underline mt-2 inline-block"
+              className="text-xs text-primary hover:underline mt-2 inline-block"
             >
               פתח מסמך רשמי →
             </a>

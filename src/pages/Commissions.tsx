@@ -7,7 +7,7 @@ const Commissions = () => {
 
   if (!isAdmin) {
     return (
-      <div className="text-center text-slate-600 mt-10">
+      <div className="text-center text-muted-foreground mt-10">
         אין לך הרשאה לצפות בעמלות.
       </div>
     );
@@ -15,12 +15,12 @@ const Commissions = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">עמלות ודוחות</h1>
-      <p className="text-sm text-slate-600">
+      <h1 className="text-2xl font-bold text-foreground">עמלות ודוחות</h1>
+      <p className="text-sm text-muted-foreground">
         מעקב אחר עמלות, הסכמי עמלות עם חברות ביטוח, דוחות תקופתיים.
       </p>
 
-      <section className="bg-white rounded-2xl shadow p-4">
+      <section className="bg-card rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold mb-3">עמלות צפויות</h2>
         <table className="w-full text-right text-sm">
           <thead>
@@ -50,7 +50,7 @@ const Commissions = () => {
                   <td className="py-2">
                     {c.netPremium.toLocaleString("he-IL")} ₪
                   </td>
-                  <td className="py-2 font-semibold text-emerald-700">
+                  <td className="py-2 font-semibold text-primary">
                     {c.finalCommission.toLocaleString("he-IL")} ₪
                   </td>
                 </tr>
@@ -60,7 +60,7 @@ const Commissions = () => {
         </table>
       </section>
 
-      <section className="bg-white rounded-2xl shadow p-4">
+      <section className="bg-card rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold mb-3">הסכמי עמלות</h2>
         <table className="w-full text-right text-sm">
           <thead>

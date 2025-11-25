@@ -18,11 +18,11 @@ const ClientDetails = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">
+      <h1 className="text-2xl font-bold text-foreground">
         {client.businessName || client.name}
       </h1>
 
-      <section className="bg-white rounded-2xl shadow p-4 text-sm space-y-1">
+      <section className="bg-card rounded-2xl shadow p-4 text-sm space-y-1">
         <div>ת"ז / ח"פ: {client.idNumber}</div>
         {client.businessAddress && <div>כתובת עסק: {client.businessAddress}</div>}
         {client.homeAddress && <div>כתובת מגורים: {client.homeAddress}</div>}
@@ -30,7 +30,7 @@ const ClientDetails = () => {
         {client.email && <div>מייל: {client.email}</div>}
       </section>
 
-      <section className="bg-white rounded-2xl shadow p-4">
+      <section className="bg-card rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold mb-3">פוליסות</h2>
         <table className="w-full text-right text-xs">
           <thead>
@@ -57,7 +57,7 @@ const ClientDetails = () => {
                 </td>
                 <td className="py-2">
                   <button
-                    className="text-blue-600 hover:underline"
+                    className="text-primary hover:underline"
                     onClick={() => setSelectedPolicyForCertificate(p.id)}
                   >
                     הפק אישור קיום →
@@ -70,7 +70,7 @@ const ClientDetails = () => {
       </section>
 
       {selectedPolicyForCertificate && (
-        <section className="bg-white rounded-2xl shadow p-4">
+        <section className="bg-card rounded-2xl shadow p-4">
           <h2 className="text-lg font-semibold mb-3">
             יצירת אישור קיום מהפוליסה
           </h2>
