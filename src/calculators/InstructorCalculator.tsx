@@ -6,13 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowRight } from 'lucide-react';
-import CompanyBadge from './CompanyBadge';
+import CompanyBadge from '../components/CompanyBadge';
 
-interface InstructorCalculatorProps {
-  onBack: () => void;
-}
-
-const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
+const InstructorCalculator = () => {
   // בחירת חברה
   const [company, setCompany] = useState<'menora' | 'hachshara'>('menora');
   
@@ -132,15 +128,6 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
 
   return (
     <main className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl" id="main-content" role="main" aria-label="מחשבון ביטוח מדריכי רכיבה">
-      <Button 
-        variant="outline" 
-        onClick={onBack} 
-        className="mb-6 hover-scale focus:ring-4 focus:ring-primary/50 focus:outline-none"
-        aria-label="חזרה למסך בחירת מחשבונים"
-      >
-        <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-        חזרה למסך בחירה
-      </Button>
 
       <Card className="shadow-2xl">
         <CardHeader className="bg-gradient-to-l from-primary/5 to-secondary/5">
@@ -184,7 +171,9 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <CompanyBadge company={company} />
+              <div className="text-center text-sm text-slate-600">
+                חברה: {company === 'menora' ? 'מנורה' : 'הכשרה'}
+              </div>
             </motion.div>
           </AnimatePresence>
 

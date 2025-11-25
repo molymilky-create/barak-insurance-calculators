@@ -1,52 +1,48 @@
-import { motion } from 'framer-motion';
-import menoraLogo from '@/assets/menora-logo.png';
-import hachsharaLogo from '@/assets/hachshara-logo.png';
+import { motion } from "framer-motion";
 
 interface CompanyBadgeProps {
-  company: 'menora' | 'hachshara';
-  productName?: string;
+  company: "menora" | "hachshara";
+  logo: string;
+  name: string;
+  isSelected: boolean;
+  onClick: () => void;
 }
 
-const CompanyBadge = ({ company, productName }: CompanyBadgeProps) => {
-  const isMenura = company === 'menora';
-  
+const CompanyBadge = ({
+  company,
+  logo,
+  name,
+  isSelected,
+  onClick,
+}: CompanyBadgeProps) => {
+  const getColors = () => {
+    if (company === "menora") {
+      return {
+        border: isSelected ? "border-yellow-500" : "border-slate-200",
+        bg: isSelected ? "bg-yellow-50" : "bg-white",
+        ring: "focus:ring-yellow-500",
+      };
+    } else {
+      return {
+        border: isSelected ? "border-blue-500" : "border-slate-200",
+        bg: isSelected ? "bg-blue-50" : "bg-white",
+        ring: "focus:ring-blue-500",
+      };
+    }
+  };
+
+  const colors = getColors();
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`mb-6 p-4 rounded-lg border-2 ${
-        isMenura 
-          ? 'bg-menora-bg border-menora-secondary' 
-          : 'bg-hachshara-bg border-hachshara-primary'
-      }`}
+    <motion.button
+      onClick={onClick}
+      className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all ${colors.border} ${colors.bg} ${colors.ring} hover:shadow-lg focus:outline-none focus:ring-2`}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <div className="flex items-center gap-4">
-        <div className={`flex-shrink-0 w-20 h-20 rounded-lg flex items-center justify-center ${
-          isMenura ? 'bg-menora-primary' : 'bg-white'
-        }`}>
-          <img 
-            src={isMenura ? menoraLogo : hachsharaLogo} 
-            alt={isMenura ? 'מנורה מבטחים' : 'הכשרה'}
-            className="w-16 h-16 object-contain"
-          />
-        </div>
-        <div className="flex-1 text-right">
-          <h3 className={`text-2xl font-bold ${
-            isMenura ? 'text-menora-dark' : 'text-hachshara-primary'
-          }`}>
-            {isMenura ? 'מנורה מבטחים' : 'הכשרה'}
-          </h3>
-          {productName && (
-            <p className={`text-lg ${
-              isMenura ? 'text-menora-secondary' : 'text-hachshara-secondary'
-            }`}>
-              {productName}
-            </p>
-          )}
-        </div>
-      </div>
-    </motion.div>
+      <img src={logo} alt={name} className="h-16 object-contain" />
+      <div className="text-lg font-bold text-slate-800">{name}</div>
+    </motion.button>
   );
 };
 
