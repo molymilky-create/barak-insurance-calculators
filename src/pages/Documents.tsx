@@ -11,8 +11,8 @@ const Documents = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">מסמכים</h1>
-      <p className="text-sm text-slate-600">
+      <h1 className="text-2xl font-bold text-foreground">מסמכים</h1>
+      <p className="text-sm text-muted-foreground">
         ג'קטים, תנאי פוליסה, טפסי הצעה, טפסי תביעה, הנחיות בטיחות, טפסי
         אישור קיום ועוד.
       </p>
@@ -31,20 +31,20 @@ const Documents = () => {
         {filtered.map((doc) => (
           <div
             key={doc.id}
-            className="bg-white rounded-2xl shadow p-4 hover:shadow-lg transition"
+            className="bg-card rounded-2xl shadow p-4 hover:shadow-lg transition"
           >
-            <div className="text-xs text-slate-500 mb-1">
+            <div className="text-xs text-muted-foreground mb-1">
               {doc.kind} • {doc.source === "COMPANY" ? "חברת ביטוח" : "סוכנות"}
             </div>
-            <div className="font-semibold text-slate-800">{doc.title}</div>
+            <div className="font-semibold text-foreground">{doc.title}</div>
             {doc.description && (
-              <p className="text-xs text-slate-600 mt-1">{doc.description}</p>
+              <p className="text-xs text-muted-foreground mt-1">{doc.description}</p>
             )}
             <a
               href={doc.fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-600 hover:underline mt-2 inline-block"
+              className="text-xs text-primary hover:underline mt-2 inline-block"
             >
               פתח מסמך →
             </a>

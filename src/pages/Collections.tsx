@@ -5,12 +5,12 @@ const Collections = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">גבייה</h1>
-      <p className="text-sm text-slate-600">
+      <h1 className="text-2xl font-bold text-foreground">גבייה</h1>
+      <p className="text-sm text-muted-foreground">
         מעקב אחר תשלומים והזכרות גבייה. כאן תוכל/י לנהל לקוחות בחוב,
         להזכיר תשלומים ולעדכן סטטוס.
       </p>
-      <div className="bg-white rounded-2xl shadow p-4">
+      <div className="bg-card rounded-2xl shadow p-4">
         <table className="w-full text-right text-sm">
           <thead>
             <tr className="border-b">

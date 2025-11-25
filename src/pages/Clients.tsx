@@ -6,8 +6,8 @@ const Clients = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">מבוטחים</h1>
-      <div className="bg-white rounded-2xl shadow p-4">
+      <h1 className="text-2xl font-bold text-foreground">מבוטחים</h1>
+      <div className="bg-card rounded-2xl shadow p-4">
         <table className="w-full text-right text-sm">
           <thead>
             <tr className="border-b">
@@ -28,7 +28,7 @@ const Clients = () => {
                 <td className="py-2">
                   <Link
                     to={`/clients/${c.id}`}
-                    className="text-blue-600 hover:underline text-xs"
+                    className="text-primary hover:underline text-xs"
                   >
                     פרטים / פוליסות / אישור קיום →
                   </Link>

@@ -53,22 +53,22 @@ const Certificates: React.FC<Props> = ({ presetClient, presetPolicy }) => {
   return (
     <div className="space-y-4">
       {!presetClient && (
-        <h1 className="text-2xl font-bold text-slate-800">
+        <h1 className="text-2xl font-bold text-foreground">
           יצירת אישור קיום ביטוח
         </h1>
       )}
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl shadow p-4 space-y-4 text-sm"
+        className="bg-card rounded-2xl shadow p-4 space-y-4 text-sm"
       >
         <div className="flex gap-2 text-xs">
           <button
             type="button"
             className={`px-3 py-1 rounded-full border ${
               mode === "NORMAL"
-                ? "bg-blue-600 text-white border-blue-600"
-                : "border-slate-300"
+                ? "bg-primary text-primary-foreground border-primary"
+                : "border-border"
             }`}
             onClick={() => setMode("NORMAL")}
           >
@@ -78,8 +78,8 @@ const Certificates: React.FC<Props> = ({ presetClient, presetPolicy }) => {
             type="button"
             className={`px-3 py-1 rounded-full border ${
               mode === "REQUESTOR"
-                ? "bg-blue-600 text-white border-blue-600"
-                : "border-slate-300"
+                ? "bg-primary text-primary-foreground border-primary"
+                : "border-border"
             }`}
             onClick={() => setMode("REQUESTOR")}
           >
@@ -173,7 +173,7 @@ const Certificates: React.FC<Props> = ({ presetClient, presetPolicy }) => {
 
         <button
           type="submit"
-          className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
+          className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
         >
           הפק אישור קיום (טיוטה)
         </button>
