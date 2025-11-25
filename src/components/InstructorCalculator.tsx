@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -165,8 +166,15 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
             </RadioGroup>
           </div>
 
-          {company === 'menora' && (
-            <>
+          <AnimatePresence mode="wait">
+            {company === 'menora' && (
+              <motion.div
+                key="menora"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
               {/* סוג פוליסה - מנורה */}
               <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
                 <Label className="text-xl font-bold text-primary block">📋 סוג פוליסה</Label>
@@ -226,25 +234,33 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
               </div>
 
               {/* הרחבה לצד ג' - רק לאחריות מקצועית */}
-              {policyType === 'professional' && (
-                <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
-                  <Label className="text-xl font-bold text-primary block">➕ הרחבה לצד ג'</Label>
-                  <RadioGroup value={includeThirdParty} onValueChange={(v) => setIncludeThirdParty(v as 'yes' | 'no')} className="grid grid-cols-2 gap-4">
-                    <div className={`relative cursor-pointer transition-all duration-300 ${includeThirdParty === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
-                      <RadioGroupItem value="yes" id="tp-yes" className="peer sr-only" />
-                      <Label htmlFor="tp-yes" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
-                        כן ✓
-                      </Label>
-                    </div>
-                    <div className={`relative cursor-pointer transition-all duration-300 ${includeThirdParty === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
-                      <RadioGroupItem value="no" id="tp-no" className="peer sr-only" />
-                      <Label htmlFor="tp-no" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
-                        לא ✗
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-              )}
+              <AnimatePresence>
+                {policyType === 'professional' && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="space-y-4 p-6 bg-muted/30 rounded-2xl overflow-hidden"
+                  >
+                    <Label className="text-xl font-bold text-primary block">➕ הרחבה לצד ג'</Label>
+                    <RadioGroup value={includeThirdParty} onValueChange={(v) => setIncludeThirdParty(v as 'yes' | 'no')} className="grid grid-cols-2 gap-4">
+                      <div className={`relative cursor-pointer transition-all duration-300 ${includeThirdParty === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
+                        <RadioGroupItem value="yes" id="tp-yes" className="peer sr-only" />
+                        <Label htmlFor="tp-yes" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                          כן ✓
+                        </Label>
+                      </div>
+                      <div className={`relative cursor-pointer transition-all duration-300 ${includeThirdParty === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
+                        <RadioGroupItem value="no" id="tp-no" className="peer sr-only" />
+                        <Label htmlFor="tp-no" className="flex items-center justify-center h-16 text-xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
+                          לא ✗
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* מדריכים נוספים */}
               <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
@@ -264,26 +280,40 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
                   </div>
                 </RadioGroup>
                 
-                {includeAdditionalInstructors === 'yes' && (
-                  <div className="space-y-3 pt-4">
-                    <Label htmlFor="num-additional" className="text-base font-semibold">מספר מדריכים נוספים (כל מדריך = 50% מהבסיס)</Label>
-                    <Input
-                      id="num-additional"
-                      type="number"
-                      min="0"
-                      value={numAdditionalInstructors}
-                      onChange={(e) => setNumAdditionalInstructors(e.target.value)}
-                      className="text-right text-lg"
-                      placeholder="0"
-                    />
-                  </div>
-                )}
+                <AnimatePresence>
+                  {includeAdditionalInstructors === 'yes' && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="space-y-3 pt-4 overflow-hidden"
+                    >
+                      <Label htmlFor="num-additional" className="text-base font-semibold">מספר מדריכים נוספים (כל מדריך = 50% מהבסיס)</Label>
+                      <Input
+                        id="num-additional"
+                        type="number"
+                        min="0"
+                        value={numAdditionalInstructors}
+                        onChange={(e) => setNumAdditionalInstructors(e.target.value)}
+                        className="text-right text-lg"
+                        placeholder="0"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </>
-          )}
+              </motion.div>
+            )}
 
-          {company === 'hachshara' && (
-            <>
+            {company === 'hachshara' && (
+              <motion.div
+                key="hachshara"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
               {/* גבול אחריות - הכשרה */}
               <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
                 <Label className="text-xl font-bold text-primary block">💰 גבול אחריות (אחריות מקצועית + צד ג')</Label>
@@ -318,8 +348,9 @@ const InstructorCalculator = ({ onBack }: InstructorCalculatorProps) => {
                   </div>
                 </RadioGroup>
               </div>
-            </>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* תוצאת חישוב שנתי */}
           <Card className="bg-gradient-to-l from-primary/10 to-secondary/10 border-primary shadow-lg">
