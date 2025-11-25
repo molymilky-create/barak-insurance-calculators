@@ -12,24 +12,30 @@ interface CalculatorCardProps {
 
 const CalculatorCard = ({ title, description, icon, image, onSelect }: CalculatorCardProps) => {
   return (
-    <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group border-2 hover:border-primary">
-      <div className="relative h-48 overflow-hidden">
+    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group border-2 hover:border-primary animate-fade-in hover-scale">
+      <div className="relative h-56 overflow-hidden">
         <img 
           src={image} 
           alt={title} 
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-2"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
-        <div className="absolute bottom-4 right-4 text-5xl drop-shadow-lg filter brightness-110">{icon}</div>
+        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/60 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute bottom-6 right-6 text-7xl drop-shadow-2xl filter brightness-125 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">{icon}</div>
       </div>
-      <CardHeader dir="rtl">
-        <CardTitle className="text-2xl text-primary">{title}</CardTitle>
-        <CardDescription className="text-right text-base">{description}</CardDescription>
+      <CardHeader dir="rtl" className="pb-4">
+        <CardTitle className="text-3xl font-bold text-primary group-hover:text-secondary transition-colors duration-300">{title}</CardTitle>
+        <CardDescription className="text-right text-lg leading-relaxed mt-2">{description}</CardDescription>
       </CardHeader>
       <CardContent dir="rtl">
-        <Button onClick={onSelect} className="w-full bg-secondary hover:bg-secondary/90 text-lg py-6">
-          כניסה למחשבון
-          <ChevronLeft className="mr-2 h-5 w-5" />
+        <Button 
+          onClick={onSelect} 
+          className="w-full bg-gradient-to-l from-primary to-secondary hover:from-secondary hover:to-primary text-white text-xl font-bold py-7 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+        >
+          <span className="flex items-center gap-3">
+            כניסה למחשבון
+            <ChevronLeft className="h-6 w-6" />
+          </span>
         </Button>
       </CardContent>
     </Card>

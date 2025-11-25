@@ -11,11 +11,11 @@ interface HorseCalculatorProps {
 }
 
 const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
-  const [thirdParty, setThirdParty] = useState('yes');
+  const [thirdParty, setThirdParty] = useState('no');
   const [lifeInsurance, setLifeInsurance] = useState('no');
   const [healthInsurance, setHealthInsurance] = useState('no');
-  const [horseValue, setHorseValue] = useState('50000');
-  const [horseType, setHorseType] = useState('sport');
+  const [horseValue, setHorseValue] = useState('0');
+  const [horseType, setHorseType] = useState('leisure');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   
@@ -79,59 +79,71 @@ const HorseCalculator = ({ onBack }: HorseCalculatorProps) => {
   }, [startDate, endDate, annualPremium]);
 
   return (
-    <div className="container mx-auto px-6 py-8" dir="rtl">
-      <Button variant="outline" onClick={onBack} className="mb-6">
+    <div className="container mx-auto px-6 py-8 animate-fade-in" dir="rtl">
+      <Button variant="outline" onClick={onBack} className="mb-6 hover-scale">
         <ArrowRight className="ml-2 h-4 w-4" />
         חזרה למסך בחירה
       </Button>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">מחשבון ביטוח סוסים</CardTitle>
-          <CardDescription>הזן את הפרטים לחישוב הפרמיה</CardDescription>
+      <Card className="shadow-2xl">
+        <CardHeader className="bg-gradient-to-l from-primary/5 to-secondary/5">
+          <CardTitle className="text-3xl font-bold">🐴 מחשבון ביטוח סוסים</CardTitle>
+          <CardDescription className="text-lg">בחר את סוגי הכיסויים הרצויים</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8 p-8">
           {/* ביטוח צד ג' */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">ביטוח צד ג'</Label>
-            <RadioGroup value={thirdParty} onValueChange={setThirdParty}>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="yes" id="tp-yes" />
-                <Label htmlFor="tp-yes" className="cursor-pointer">כן</Label>
+          <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+            <Label className="text-xl font-bold text-primary block">⚖️ ביטוח צד ג'</Label>
+            <RadioGroup value={thirdParty} onValueChange={setThirdParty} className="grid grid-cols-2 gap-4">
+              <div className={`relative cursor-pointer transition-all duration-300 ${thirdParty === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="yes" id="tp-yes" className="peer sr-only" />
+                <Label htmlFor="tp-yes" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                  כן ✓
+                </Label>
               </div>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="no" id="tp-no" />
-                <Label htmlFor="tp-no" className="cursor-pointer">לא</Label>
+              <div className={`relative cursor-pointer transition-all duration-300 ${thirdParty === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="no" id="tp-no" className="peer sr-only" />
+                <Label htmlFor="tp-no" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
+                  לא ✗
+                </Label>
               </div>
             </RadioGroup>
           </div>
 
           {/* ביטוח חיים */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">ביטוח חיים</Label>
-            <RadioGroup value={lifeInsurance} onValueChange={setLifeInsurance}>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="yes" id="life-yes" />
-                <Label htmlFor="life-yes" className="cursor-pointer">כן</Label>
+          <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+            <Label className="text-xl font-bold text-primary block">🐴 ביטוח חיים</Label>
+            <RadioGroup value={lifeInsurance} onValueChange={setLifeInsurance} className="grid grid-cols-2 gap-4">
+              <div className={`relative cursor-pointer transition-all duration-300 ${lifeInsurance === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="yes" id="life-yes" className="peer sr-only" />
+                <Label htmlFor="life-yes" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                  כן ✓
+                </Label>
               </div>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="no" id="life-no" />
-                <Label htmlFor="life-no" className="cursor-pointer">לא</Label>
+              <div className={`relative cursor-pointer transition-all duration-300 ${lifeInsurance === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="no" id="life-no" className="peer sr-only" />
+                <Label htmlFor="life-no" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
+                  לא ✗
+                </Label>
               </div>
             </RadioGroup>
           </div>
 
           {/* ביטוח בריאות */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">ביטוח בריאות</Label>
-            <RadioGroup value={healthInsurance} onValueChange={setHealthInsurance}>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="yes" id="health-yes" />
-                <Label htmlFor="health-yes" className="cursor-pointer">כן</Label>
+          <div className="space-y-4 p-6 bg-muted/30 rounded-2xl animate-scale-in">
+            <Label className="text-xl font-bold text-primary block">🏥 ביטוח בריאות</Label>
+            <RadioGroup value={healthInsurance} onValueChange={setHealthInsurance} className="grid grid-cols-2 gap-4">
+              <div className={`relative cursor-pointer transition-all duration-300 ${healthInsurance === 'yes' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="yes" id="health-yes" className="peer sr-only" />
+                <Label htmlFor="health-yes" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=unchecked]:border-border hover:border-primary/50 hover:shadow-lg">
+                  כן ✓
+                </Label>
               </div>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="no" id="health-no" />
-                <Label htmlFor="health-no" className="cursor-pointer">לא</Label>
+              <div className={`relative cursor-pointer transition-all duration-300 ${healthInsurance === 'no' ? 'scale-105' : 'hover:scale-102'}`}>
+                <RadioGroupItem value="no" id="health-no" className="peer sr-only" />
+                <Label htmlFor="health-no" className="flex items-center justify-center h-20 text-2xl font-bold rounded-2xl border-4 cursor-pointer transition-all duration-300 peer-data-[state=checked]:border-muted-foreground peer-data-[state=checked]:bg-muted peer-data-[state=checked]:text-foreground peer-data-[state=unchecked]:border-border hover:border-muted-foreground/50 hover:shadow-lg">
+                  לא ✗
+                </Label>
               </div>
             </RadioGroup>
           </div>

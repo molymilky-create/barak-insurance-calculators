@@ -15,16 +15,16 @@ const Index = () => {
   const [selectedCalculator, setSelectedCalculator] = useState<CalculatorType>(null);
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background" dir="rtl">
       <Header />
       
       {selectedCalculator === null ? (
         <>
           {/* מסך בחירת מחשבון */}
           <main className="container mx-auto px-6 py-12">
-            <div className="text-center mb-12">
-              <h2 className="text-5xl font-bold text-primary mb-4">
-                מחשבוני ביטוח
+            <div className="text-center mb-12 animate-fade-in">
+              <h2 className="text-6xl font-bold bg-gradient-to-l from-primary via-secondary to-primary bg-clip-text text-transparent mb-4 animate-scale-in">
+                מחשבוני ביטוח מתקדמים
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 בחרו מחשבון, הזינו נתונים, וקבלו פרמיה שנתית ופרמיה לתקופה חלקית
@@ -32,34 +32,42 @@ const Index = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <CalculatorCard
-                title="ביטוח סוסים"
-                description="חישוב פרמיה עבור ביטוח צד ג', ביטוח חיים ובריאות לסוסים פרטיים"
-                icon="🐴"
-                image={horseImage}
-                onSelect={() => setSelectedCalculator('horse')}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+                <CalculatorCard
+                  title="ביטוח סוסים"
+                  description="חישוב פרמיה עבור ביטוח צד ג', ביטוח חיים ובריאות לסוסים פרטיים"
+                  icon="🐴"
+                  image={horseImage}
+                  onSelect={() => setSelectedCalculator('horse')}
+                />
+              </div>
               
-              <CalculatorCard
-                title="ביטוח חוות סוסים"
-                description="חישוב פרמיה עבור ביטוח חבות מעבידים, צד ג' וביטוח רכוש לחוות"
-                icon="🐎"
-                image={farmImage}
-                onSelect={() => setSelectedCalculator('farm')}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                <CalculatorCard
+                  title="ביטוח חוות סוסים"
+                  description="חישוב פרמיה עבור ביטוח חבות מעבידים, צד ג' וביטוח רכוש לחוות"
+                  icon="🐎"
+                  image={farmImage}
+                  onSelect={() => setSelectedCalculator('farm')}
+                />
+              </div>
               
-              <CalculatorCard
-                title="ביטוח מדריכי רכיבה"
-                description="חישוב פרמיה עבור ביטוח אחריות מקצועית וצד ג' למדריכי רכיבה"
-                icon="🏇"
-                image={instructorImage}
-                onSelect={() => setSelectedCalculator('instructor')}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                <CalculatorCard
+                  title="ביטוח מדריכי רכיבה"
+                  description="חישוב פרמיה עבור ביטוח אחריות מקצועית וצד ג' למדריכי רכיבה"
+                  icon="🏇"
+                  image={instructorImage}
+                  onSelect={() => setSelectedCalculator('instructor')}
+                />
+              </div>
             </div>
           </main>
 
           {/* מודול חוקים וחוזרים */}
-          <LawsDatabase />
+          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <LawsDatabase />
+          </div>
         </>
       ) : (
         <>
