@@ -257,19 +257,32 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
           <AnimatePresence mode="wait">
             <motion.div
               key={company}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
             >
               <CompanyBadge company={company} />
             </motion.div>
           </AnimatePresence>
 
-          {company === 'menora' ? (
-            <>
+          <AnimatePresence mode="wait">
+            {company === 'menora' ? (
+              <motion.div
+                key="menora-content"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 30 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="space-y-8"
+              >
               {/* Menora - Liability Limit */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <Label className="text-xl font-bold text-primary block">⚖️ גבול אחריות צד ג'</Label>
                 <RadioGroup value={menoraLiability} onValueChange={(v) => setMenoraLiability(v as '1m' | '2m' | '4m')} className="space-y-3">
                   <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
@@ -294,10 +307,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     <span className="font-bold text-primary text-lg">9,500 ₪</span>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Calculation Method */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <Label className="text-xl font-bold text-primary block">🧮 שיטת חישוב תוספות</Label>
                 <RadioGroup value={calcMethod} onValueChange={(v) => setCalcMethod(v as 'base' | 'cumulative')} className="space-y-3">
                   <div className="flex items-center gap-3 p-4 border-2 rounded-xl hover:border-primary transition-colors">
@@ -315,10 +333,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Trips */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-xl font-bold text-primary block">🚶 טיולים מחוץ לחווה</Label>
@@ -350,10 +373,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Camp */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <div>
                   <Label className="text-xl font-bold text-primary block">👶 הפעלת קייטנות עד 20 ילדים</Label>
                   <p className="text-sm text-muted-foreground mt-1">תוספת 50% מפרמיית הבסיס</p>
@@ -372,10 +400,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Number of Instructors */}
-              <div className="space-y-4 p-6 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+                className="space-y-4 p-6 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl"
+              >
                 <Label className="text-xl font-bold block">👨‍🏫 מספר מדריכי רכיבה בחווה</Label>
                 <RadioGroup value={numInstructors} onValueChange={(v) => setNumInstructors(v as '1-5' | '6-10' | '10+')} className="space-y-3">
                   <div className="flex items-center gap-3 p-4 border-2 bg-white rounded-xl hover:border-primary transition-colors">
@@ -391,10 +424,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     <Label htmlFor="instructors-10plus" className="cursor-pointer font-medium text-lg">מעל 10 מדריכי רכיבה</Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Number of Horses */}
-              <div className="space-y-4 p-6 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.4 }}
+                className="space-y-4 p-6 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl"
+              >
                 <div className="flex items-center justify-between">
                   <Label className="text-xl font-bold block">🐴 מספר סוסים בחווה</Label>
                   {calcMethod === 'cumulative' && getHorsePercentage() > 0 && (
@@ -433,10 +471,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Professional Liability Cancellation */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-xl font-bold text-primary block">📋 ביטול חריג אחריות מקצועית</Label>
@@ -468,10 +511,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Employer Liability */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <div>
                   <Label className="text-xl font-bold text-primary block">👔 חבות מעבידים</Label>
                   <p className="text-sm text-muted-foreground mt-1">ביטוח חבות כלפי עובדים</p>
@@ -529,12 +577,23 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
-            </>
-          ) : (
-            <>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="hachshara-content"
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="space-y-8"
+              >
               {/* Hachshara - Liability Limit */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <Label className="text-xl font-bold text-primary block">⚖️ גבול אחריות צד ג'</Label>
                 <RadioGroup value={hachsharaLiability} onValueChange={(v) => setHachsharaLiability(v as '1m' | '2m' | '4m')} className="space-y-3">
                   <div className="flex items-center justify-between p-4 border-2 rounded-xl hover:border-primary transition-colors">
@@ -559,10 +618,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     <span className="font-bold text-primary text-lg">12,000 ₪</span>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Hachshara Trips */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <div>
                   <Label className="text-xl font-bold text-primary block">🚶 כולל טיולים</Label>
                   <p className="text-sm text-muted-foreground mt-1">תוספת 2,000 ₪</p>
@@ -581,10 +645,15 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
 
               {/* Hachshara Professional Liability Cancellation */}
-              <div className="space-y-4 p-6 bg-muted/30 rounded-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                className="space-y-4 p-6 bg-muted/30 rounded-2xl"
+              >
                 <div>
                   <Label className="text-xl font-bold text-primary block">📋 ביטול חריג אחריות מקצועית</Label>
                   <p className="text-sm text-muted-foreground mt-1">תוספות משתנות לפי גבול אחריות וטיולים</p>
@@ -603,13 +672,20 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
-            </>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Annual Premium Summary */}
+          <AnimatePresence>
           {annualPremium > 0 && (
-            <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary shadow-xl animate-scale-in">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+            <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary shadow-xl">
               <CardHeader>
                 <CardTitle className="text-2xl">סך הכל לתשלום (שנתי)</CardTitle>
               </CardHeader>
@@ -629,10 +705,19 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                 )}
               </CardContent>
             </Card>
+            </motion.div>
           )}
+          </AnimatePresence>
 
           {/* Period Calculation */}
+          <AnimatePresence>
           {annualPremium > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
             <div className="space-y-4 p-6 bg-muted/20 rounded-2xl border-2 border-dashed border-primary/30">
               <h3 className="text-xl font-bold text-primary">חישוב לתקופה מסוימת</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -671,7 +756,9 @@ const FarmCalculator = ({ onBack }: FarmCalculatorProps) => {
                 </Card>
               )}
             </div>
+            </motion.div>
           )}
+          </AnimatePresence>
 
           <Button className="w-full bg-gradient-to-l from-primary to-secondary hover:from-secondary hover:to-primary text-white text-xl py-7" size="lg">
             המשך להזמנה
