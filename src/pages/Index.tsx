@@ -23,10 +23,10 @@ const Index = () => {
           {/* מסך בחירת מחשבון */}
           <main className="container mx-auto px-6 py-12">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-foreground mb-4">
+              <h2 className="text-5xl font-bold text-primary mb-4">
                 מחשבוני ביטוח
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 בחרו מחשבון, הזינו נתונים, וקבלו פרמיה שנתית ופרמיה לתקופה חלקית
               </p>
             </div>
