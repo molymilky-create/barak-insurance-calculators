@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Calculators from "./pages/Calculators";
 import Clients from "./pages/Clients";
 import ClientDetails from "./pages/ClientDetails";
+import Leads from "./pages/Leads";
 import Renewals from "./pages/Renewals";
 import Collections from "./pages/Collections";
 import Certificates from "./pages/Certificates";
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: "calculators", element: <Calculators /> },
       { path: "clients", element: <Clients /> },
       { path: "clients/:clientId", element: <ClientDetails /> },
+      { path: "leads", element: <Leads /> },
       { path: "renewals", element: <Renewals /> },
       { path: "collections", element: <Collections /> },
       { path: "certificates", element: <Certificates /> },
