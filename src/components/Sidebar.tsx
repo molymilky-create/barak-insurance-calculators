@@ -39,10 +39,6 @@ const Sidebar = () => {
           📋 לידים
         </NavLink>
 
-        <NavLink to="/tasks" className={navClasses}>
-          ✅ משימות
-        </NavLink>
-
         <NavLink to="/renewals" className={navClasses}>
           🔁 חידושים
         </NavLink>
@@ -61,14 +57,6 @@ const Sidebar = () => {
 
         <NavLink to="/regulations" className={navClasses}>
           ⚖️ חוקים וחוזרים
-        </NavLink>
-
-        <NavLink to="/employees" className={navClasses}>
-          🧑‍💼 עובדים וחופשות
-        </NavLink>
-
-        <NavLink to="/marketing" className={navClasses}>
-          📣 שיווק ותקשורת
         </NavLink>
 
         {isAdmin && (
