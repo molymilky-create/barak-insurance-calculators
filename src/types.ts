@@ -1,3 +1,4 @@
+// ===== משתמשים / הרשאות =====
 export type Role = "admin" | "user";
 
 export interface User {
@@ -7,6 +8,7 @@ export interface User {
   role: Role;
 }
 
+// ===== חברות ביטוח / מוצרים =====
 export type CompanyCode = "MENORA" | "HACHSHARA" | "OTHER";
 
 export interface Company {
@@ -21,6 +23,7 @@ export type ProductType =
   | "TRAINER"
   | "OTHER";
 
+// ===== מבוטחים / פוליסות =====
 export interface Client {
   id: string;
   name: string;
@@ -39,12 +42,13 @@ export interface Policy {
   companyId: CompanyCode;
   productType: ProductType;
   policyNumber: string;
-  startDate: string; // ISO yyyy-mm-dd
+  startDate: string; // yyyy-mm-dd
   endDate: string;
   annualPremium: number;
   notes?: string;
 }
 
+// ===== חידושים =====
 export type RenewalStatus =
   | "NEW"
   | "IN_PROGRESS"
@@ -58,13 +62,14 @@ export interface Renewal {
   policyId: string;
   clientId: string;
   assignedToUserId: string;
-  expectedRenewalDate: string;
+  expectedRenewalDate: string; // yyyy-mm-dd
   previousPremium?: number;
   expectedPremium?: number;
   status: RenewalStatus;
   notes?: string;
 }
 
+// ===== גבייה =====
 export type CollectionStatus =
   | "NEW"
   | "REMINDER_SENT"
@@ -79,10 +84,11 @@ export interface Collection {
   amountToCollect: number;
   status: CollectionStatus;
   assignedToUserId: string;
-  dueDate: string;
+  dueDate: string; // yyyy-mm-dd
   notes?: string;
 }
 
+// ===== עמלות =====
 export interface CommissionAgreement {
   id: string;
   companyId: CompanyCode;
@@ -103,6 +109,7 @@ export interface CommissionEntry {
   finalCommission: number;
 }
 
+// ===== אישורי קיום =====
 export type CertificateMode = "NORMAL" | "REQUESTOR";
 
 export interface Certificate {
@@ -115,10 +122,11 @@ export interface Certificate {
   productType?: ProductType;
   codes: string[];
   freeText?: string;
-  createdAt: string;
+  createdAt: string; // ISO
   createdByUserId: string;
 }
 
+// ===== מסמכים / ג'קטים =====
 export type DocumentSource = "COMPANY" | "AGENCY";
 
 export type DocumentKind =
@@ -141,6 +149,7 @@ export interface DocumentMeta {
   fileUrl: string;
 }
 
+// ===== חוקים / חוזרים =====
 export interface Regulation {
   id: string;
   title: string;
@@ -150,14 +159,14 @@ export interface Regulation {
   fileUrl: string;
 }
 
-// עובדים וימי חופש
+// ===== עובדים וימי חופש =====
 export interface Employee {
   id: string;
   name: string;
   email: string;
   role: Role;
   position?: string;
-  hireDate?: string;
+  hireDate?: string; // yyyy-mm-dd
   managerId?: string;
 }
 
@@ -166,56 +175,73 @@ export type TimeOffStatus = "PENDING" | "APPROVED" | "REJECTED";
 export interface EmployeeTimeOff {
   id: string;
   employeeId: string;
-  from: string;
-  to: string;
+  from: string; // yyyy-mm-dd
+  to: string; // yyyy-mm-dd
   status: TimeOffStatus;
   reason?: string;
-  createdAt: string;
+  createdAt: string; // ISO
 }
 
-// CRM / שיווק
-
-export type LeadStatus = "NEW" | "CONTACTED" | "QUOTED" | "WON" | "LOST";
-
-export type Channel = "PHONE" | "WHATSAPP" | "EMAIL" | "SMS" | "MEETING";
+// ===== לידים =====
+export type LeadStatus =
+  | "NEW"
+  | "CONTACTED"
+  | "QUOTED"
+  | "WON"
+  | "LOST";
 
 export interface Lead {
   id: string;
   name: string;
   phone?: string;
   email?: string;
-  source?: string; // מקור הליד: פייסבוק, הפניה, אתר, באפי...
-  notes?: string;
+  source?: string;
   status: LeadStatus;
   estimatedAnnualPremium?: number;
-  createdAt: string;
-  nextActionDate?: string;
+  nextActionDate?: string; // yyyy-mm-dd
   nextActionNotes?: string;
-  lastChannel?: Channel;
+  lastChannel?: "PHONE" | "EMAIL" | "WHATSAPP" | "IN_PERSON" | "OTHER";
+  createdAt: string; // yyyy-mm-dd
+  assignedToUserId?: string;
+  notes?: string;
 }
+
+// ===== משימות =====
+export type TaskKind =
+  | "LEAD"
+  | "RENEWAL"
+  | "COLLECTION"
+  | "CARRIER_REQUEST"
+  | "CERTIFICATE"
+  | "SERVICE"
+  | "OTHER";
+
+export type TaskStatus =
+  | "OPEN"
+  | "IN_PROGRESS"
+  | "WAITING_CLIENT"
+  | "WAITING_COMPANY"
+  | "WAITING_MANAGER_REVIEW"
+  | "DONE"
+  | "CANCELLED";
+
+export type TaskPriority = "LOW" | "NORMAL" | "HIGH" | "CRITICAL";
 
 export interface Task {
   id: string;
   title: string;
-  relatedClientId?: string;
-  relatedPolicyId?: string;
-  relatedLeadId?: string;
-  dueDate: string;
-  completed: boolean;
-  assigneeUserId: string;
-  notes?: string;
-  channel?: Channel;
-  kind?: "RENEWAL" | "COLLECTION" | "LEAD" | "OTHER";
-}
-
-export type CampaignChannel = "EMAIL" | "WHATSAPP" | "SMS";
-
-export interface CampaignTemplate {
-  id: string;
-  name: string;
-  channel: CampaignChannel;
   description?: string;
-  subject?: string;
-  body: string;
-  targetTag?: string; // לדוגמה: "חווה", "סוסים פרטיים", "מאמנים"
+
+  kind: TaskKind;
+  status: TaskStatus;
+  priority: TaskPriority;
+
+  assignedToUserId: string;
+  createdByUserId: string;
+  createdAt: string; // yyyy-mm-dd
+  dueDate: string; // yyyy-mm-dd
+
+  relatedClientName?: string;
+  requiresManagerReview?: boolean;
+  managerApprovedAt?: string; // yyyy-mm-dd
 }
