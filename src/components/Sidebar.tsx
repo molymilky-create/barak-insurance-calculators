@@ -39,6 +39,10 @@ const Sidebar = () => {
           📋 לידים
         </NavLink>
 
+        <NavLink to="/tasks" className={navClasses}>
+          ✅ משימות
+        </NavLink>
+
         <NavLink to="/renewals" className={navClasses}>
           🔁 חידושים
         </NavLink>
