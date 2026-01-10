@@ -63,6 +63,10 @@ const Sidebar = () => {
           ⚖️ חוקים וחוזרים
         </NavLink>
 
+        <NavLink to="/employees" className={navClasses}>
+          🧑‍💼 עובדים וחופשות
+        </NavLink>
+
         {isAdmin && (
           <NavLink to="/commissions" className={navClasses}>
             📈 עמלות ודוחות
