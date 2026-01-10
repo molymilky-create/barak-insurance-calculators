@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { useData } from "../context/DataContext";
 import { useAuth } from "../context/AuthContext";
@@ -7,9 +8,9 @@ import {
   Users, 
   TrendingUp, 
   Calendar,
-  AlertCircle
+  AlertCircle,
+  DollarSign
 } from "lucide-react";
-
 const Dashboard = () => {
   const { policies, renewals, leads, tasks, commissions } = useData();
   const { isAdmin } = useAuth();
@@ -64,20 +65,22 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="hover-scale">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">חידושים קרובים</p>
-                <p className="text-3xl font-bold text-foreground mt-1">{upcomingRenewals.length}</p>
-                <p className="text-xs text-muted-foreground">ב-30 ימים הקרובים</p>
+        <Link to="/renewals">
+          <Card className="hover-scale cursor-pointer">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">חידושים קרובים</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">{upcomingRenewals.length}</p>
+                  <p className="text-xs text-muted-foreground">ב-30 ימים הקרובים</p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center">
+                  <RefreshCw className="h-6 w-6 text-secondary" />
+                </div>
               </div>
-              <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center">
-                <RefreshCw className="h-6 w-6 text-secondary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
         <Card className="hover-scale">
           <CardContent className="p-5">
@@ -129,22 +132,24 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-900/30 border-green-200 dark:border-green-800">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">עמלות צפויות</p>
-                  <p className="text-3xl font-bold text-green-700 dark:text-green-400 mt-1">
-                    {totalCommission.toLocaleString("he-IL")} ₪
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">עמלה סופית צפויה</p>
+          <Link to="/commissions">
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-900/30 border-green-200 dark:border-green-800 cursor-pointer hover-scale">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">עמלות צפויות</p>
+                    <p className="text-3xl font-bold text-green-700 dark:text-green-400 mt-1">
+                      {totalCommission.toLocaleString("he-IL")} ₪
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">עמלה סופית צפויה</p>
+                  </div>
+                  <div className="h-14 w-14 rounded-full bg-green-200 dark:bg-green-800 flex items-center justify-center">
+                    <DollarSign className="h-7 w-7 text-green-700 dark:text-green-300" />
+                  </div>
                 </div>
-                <div className="h-14 w-14 rounded-full bg-green-200 dark:bg-green-800 flex items-center justify-center">
-                  <TrendingUp className="h-7 w-7 text-green-700 dark:text-green-300" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       )}
 
