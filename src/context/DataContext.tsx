@@ -13,8 +13,8 @@ import {
   EmployeeTimeOff,
   Lead,
   Task,
-  CampaignTemplate,
   LeadStatus,
+  TaskStatus,
 } from "../types";
 
 interface DataContextValue {
@@ -32,7 +32,6 @@ interface DataContextValue {
 
   leads: Lead[];
   tasks: Task[];
-  campaignTemplates: CampaignTemplate[];
 
   addCertificate: (c: Omit<Certificate, "id" | "createdAt">) => void;
   addTimeOffRequest: (t: Omit<EmployeeTimeOff, "id" | "createdAt">) => void;
@@ -40,8 +39,8 @@ interface DataContextValue {
   addLead: (input: Omit<Lead, "id" | "createdAt" | "status">) => void;
   updateLeadStatus: (id: string, status: LeadStatus) => void;
 
-  addTask: (t: Omit<Task, "id" | "completed">) => void;
-  toggleTaskCompleted: (id: string) => void;
+  addTask: (t: Omit<Task, "id" | "createdAt" | "createdByUserId">) => void;
+  updateTaskStatus: (id: string, status: TaskStatus) => void;
 }
 
 const DataContext = createContext<DataContextValue | undefined>(undefined);
@@ -201,6 +200,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
       nextActionDate: "2025-01-25",
       nextActionNotes: "לחזור עם הצעת מחיר מנורה + הכשרה",
       lastChannel: "WHATSAPP",
+      assignedToUserId: "u2",
       notes: "רוצה כיסוי לטיולים וקייטנות בקיץ",
     },
     {
@@ -211,6 +211,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
       status: "NEW",
       createdAt: "2025-01-22",
       lastChannel: "PHONE",
+      assignedToUserId: "u2",
       notes: "סוס אחד, ערך משוער 60,000, גם צד ג' וגם חיים",
     },
   ]);
@@ -219,60 +220,29 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
     {
       id: "task1",
       title: "לצלצל לאורן לגבי חידוש + הרחבת קייטנות",
-      relatedLeadId: "lead1",
-      dueDate: "2025-01-25",
-      completed: false,
-      assigneeUserId: "u2",
-      notes: "להדגיש כיסוי צד ג' בטיולים",
-      channel: "PHONE",
+      description: "להדגיש כיסוי צד ג' בטיולים",
       kind: "LEAD",
+      status: "OPEN",
+      priority: "NORMAL",
+      assignedToUserId: "u2",
+      createdByUserId: "u1",
+      createdAt: "2025-01-15",
+      dueDate: "2025-01-25",
+      relatedClientName: "אורן חוות השדה",
     },
     {
       id: "task2",
       title: "לשלוח תזכורת חידוש לחוות לדוגמה",
-      relatedClientId: "c1",
-      relatedPolicyId: "p1",
-      dueDate: "2025-11-20",
-      completed: false,
-      assigneeUserId: "u2",
-      channel: "EMAIL",
+      description: "תזכורת במייל + בקשה לעדכון פעילות",
       kind: "RENEWAL",
-    },
-  ]);
-
-  const [campaignTemplates] = useState<CampaignTemplate[]>([
-    {
-      id: "camp1",
-      name: "חידוש חוות סוסים 30 ימים לפני תום תקופה",
-      channel: "EMAIL",
-      description: "מייל רגיש ומקצועי לפני חידוש חווה",
-      subject: "חידוש ביטוח החווה - שלא נפספס יום כיסוי",
-      body:
-        "שלום [[שם מבוטח]],\n\nבתאריך [[תאריך סיום]] מסתיים ביטוח החווה שלך.\n" +
-        "חשוב לנו לדאוג שלא יהיה אף יום ללא כיסוי, במיוחד כשיש רוכבים, סוסים ופעילויות.\n\n" +
-        "נשמח לעבור יחד על הפוליסה, לוודא שהכיסוי מתאים לפעילות הנוכחית בחווה, " +
-        "ולבדוק האם יש עדכונים חשובים (סוסים חדשים, מדריכים, טיולים, קייטנות ועוד).\n\n" +
-        "בברכה,\nברק ביטוחים",
-      targetTag: "חווה",
-    },
-    {
-      id: "camp2",
-      name: "תזכורת חידוש קצרה בוואטסאפ",
-      channel: "WHATSAPP",
-      description: "טקסט קצר לוואטסאפ לפני חידוש",
-      body:
-        "היי [[שם פרטי]], פה [[שם סוכן]] מברק ביטוחים. רק מזכיר שתוקף ביטוח [[סוג פוליסה]] שלך מסתיים ב-[[תאריך סיום]]. " +
-        "רוצה שאשלח לך בקצרה מה האפשרויות לחידוש?",
-      targetTag: "כללי",
-    },
-    {
-      id: "camp3",
-      name: "SMS חידוש סוסים פרטיים",
-      channel: "SMS",
-      description: "SMS קצר לסוס פרטי",
-      body:
-        "ברק ביטוחים: ביטוח הסוס שלך מסתיים בקרוב. חשוב לחדש כדי לשמור על הכיסוי. לחזרה - [[טלפון סוכן]].",
-      targetTag: "סוסים פרטיים",
+      status: "IN_PROGRESS",
+      priority: "HIGH",
+      assignedToUserId: "u2",
+      createdByUserId: "u1",
+      createdAt: "2025-10-15",
+      dueDate: "2025-11-20",
+      relatedClientName: "ישראל ישראלי",
+      requiresManagerReview: true,
     },
   ]);
 
@@ -292,7 +262,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addLead = (input: Omit<Lead, "id" | "createdAt" | "status">) => {
     const id = `lead_${Date.now()}`;
-    const createdAt = new Date().toISOString();
+    const createdAt = new Date().toISOString().slice(0, 10);
     setLeads((prev) => [
       {
         ...input,
@@ -310,23 +280,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  const addTask = (t: Omit<Task, "id" | "completed">) => {
+  const addTask = (t: Omit<Task, "id" | "createdAt" | "createdByUserId">) => {
     const id = `task_${Date.now()}`;
+    const createdAt = new Date().toISOString().slice(0, 10);
     setTasks((prev) => [
       ...prev,
       {
         ...t,
         id,
-        completed: false,
+        createdAt,
+        createdByUserId: "u1",
       },
     ]);
   };
 
-  const toggleTaskCompleted = (id: string) => {
+  const updateTaskStatus = (id: string, status: TaskStatus) => {
     setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+      prev.map((task) => (task.id === id ? { ...task, status } : task))
     );
   };
 
@@ -346,13 +316,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
         timeOffRequests,
         leads,
         tasks,
-        campaignTemplates,
         addCertificate,
         addTimeOffRequest,
         addLead,
         updateLeadStatus,
         addTask,
-        toggleTaskCompleted,
+        updateTaskStatus,
       }}
     >
       {children}
