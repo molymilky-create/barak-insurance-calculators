@@ -72,10 +72,6 @@ const Sidebar = () => {
             📈 עמלות ודוחות
           </NavLink>
         )}
-
-        <NavLink to="/insurance-report" className={navClasses}>
-          📊 דוח חידושים A4
-        </NavLink>
       </nav>
     </aside>
   );

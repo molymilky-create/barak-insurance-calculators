@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ import {
   XCircle,
   AlertCircle,
   Search,
+  FileSpreadsheet,
 } from "lucide-react";
 import { useData } from "../context/DataContext";
 import type { RenewalStatus, Channel } from "../types";
@@ -175,6 +177,12 @@ const Renewals = () => {
           <h1 className="text-3xl font-bold text-foreground">חידושים</h1>
           <p className="text-muted-foreground mt-1">צינור עבודה לניהול חידושי פוליסות</p>
         </div>
+        <Link to="/insurance-report">
+          <Button variant="outline" size="lg" className="gap-2 text-base">
+            <FileSpreadsheet className="h-5 w-5" />
+            דוח חידושים A4
+          </Button>
+        </Link>
       </div>
 
       {/* Stats */}
