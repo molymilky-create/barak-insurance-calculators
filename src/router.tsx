@@ -13,6 +13,7 @@ import Certificates from "./pages/Certificates";
 import Documents from "./pages/Documents";
 import Regulations from "./pages/Regulations";
 import Commissions from "./pages/Commissions";
+import InsuranceRenewalsReport from "./pages/InsuranceRenewalsReport";
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
       { path: "documents", element: <Documents /> },
       { path: "regulations", element: <Regulations /> },
       { path: "commissions", element: <Commissions /> },
+      { path: "insurance-report", element: <InsuranceRenewalsReport /> },
     ],
   },
 ]);
