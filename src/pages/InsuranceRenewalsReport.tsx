@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Upload, FileSpreadsheet, Printer, Download } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Upload, FileSpreadsheet, Printer, Database, RefreshCw } from "lucide-react";
 import * as XLSX from "xlsx";
+import { useData } from "../context/DataContext";
 
 // Types
 interface PolicyRecord {
@@ -36,10 +38,21 @@ const COMPANY_COLORS: Record<InsuranceCompany, { primary: string; secondary: str
   "שלמה": { primary: "#16A34A", secondary: "#F97316", gradient: "linear-gradient(90deg, #16A34A 0%, #F97316 100%)" },
 };
 
-const STATUS_LABELS: Record<string, PolicyStatus[]> = {
-  "חידושים": ["חידוש"],
-  "חדשים": ["חדש"],
-  "תוספות/בתהליך": ["בתהליך"],
+// Map company codes to Hebrew names
+const COMPANY_CODE_MAP: Record<string, InsuranceCompany> = {
+  "MENORA": "מנורה",
+  "HACHSHARA": "הכשרה",
+  "OTHER": "איילון",
+};
+
+// Map renewal status to report status
+const STATUS_MAP: Record<string, PolicyStatus> = {
+  "NEW": "חדש",
+  "IN_PROGRESS": "בתהליך",
+  "QUOTED": "בתהליך",
+  "WAITING_CLIENT": "בתהליך",
+  "COMPLETED": "חידוש",
+  "CANCELLED": "בוטל",
 };
 
 // Employee assignment logic
@@ -100,7 +113,6 @@ function parseExcelFile(file: File): Promise<PolicyRecord[]> {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown[][];
 
-        // Skip header row
         const records: PolicyRecord[] = [];
         for (let i = 1; i < jsonData.length; i++) {
           const row = jsonData[i] as (string | number | undefined)[];
@@ -150,9 +162,48 @@ function parseExcelFile(file: File): Promise<PolicyRecord[]> {
 }
 
 const InsuranceRenewalsReport = () => {
+  const { renewals, policies, clients, employees } = useData();
   const [records, setRecords] = useState<PolicyRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [dataSource, setDataSource] = useState<"none" | "excel" | "system">("none");
   const printRef = useRef<HTMLDivElement>(null);
+
+  // Convert system renewals to PolicyRecord format
+  const systemRecords = useMemo((): PolicyRecord[] => {
+    return renewals.map((renewal) => {
+      const policy = policies.find((p) => p.id === renewal.policyId);
+      const client = clients.find((c) => c.id === renewal.clientId);
+      const assignee = employees.find((e) => e.id === renewal.assignedToUserId);
+
+      const insuranceType = policy?.productType || "OTHER";
+      const companyCode = policy?.companyId || "OTHER";
+      const insuranceCompany = COMPANY_CODE_MAP[companyCode] || "מנורה";
+      const monthlyPremium = Math.round((policy?.annualPremium || 0) / 12);
+
+      const assignedEmployee = calculateAssignedEmployee({
+        insuranceType,
+        insuranceCompany,
+        monthlyPremium,
+      });
+
+      return {
+        id: renewal.id,
+        policyNumber: policy?.policyNumber || "—",
+        insuredName: client?.businessName || client?.name || "—",
+        insuranceType: insuranceType === "FARM" ? "חווה" : 
+                       insuranceType === "HORSE" ? "סוסים" :
+                       insuranceType === "INSTRUCTOR" ? "מדריך" :
+                       insuranceType === "TRAINER" ? "מאמן" : "אחר",
+        insuranceCompany,
+        status: STATUS_MAP[renewal.status] || "חדש",
+        startDate: policy?.startDate || "",
+        monthlyPremium,
+        paymentMethod: "",
+        notes: renewal.notes || "",
+        assignedEmployee: assignee?.name || assignedEmployee,
+      };
+    });
+  }, [renewals, policies, clients, employees]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -162,6 +213,7 @@ const InsuranceRenewalsReport = () => {
     try {
       const parsed = await parseExcelFile(file);
       setRecords(parsed);
+      setDataSource("excel");
     } catch (error) {
       console.error("Error parsing Excel:", error);
       alert("שגיאה בקריאת קובץ האקסל");
@@ -170,8 +222,18 @@ const InsuranceRenewalsReport = () => {
     }
   };
 
+  const handleLoadFromSystem = () => {
+    setRecords(systemRecords);
+    setDataSource("system");
+  };
+
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleClear = () => {
+    setRecords([]);
+    setDataSource("none");
   };
 
   // Group records by company and status
@@ -202,13 +264,13 @@ const InsuranceRenewalsReport = () => {
 
   // Calculate totals
   const totalSummary = useMemo(() => {
-    let renewals = 0, renewalsPremium = 0;
+    let renewalsCount = 0, renewalsPremium = 0;
     let newPolicies = 0, newPremium = 0;
     let inProcess = 0, inProcessPremium = 0;
 
     records.forEach((r) => {
       if (r.status === "חידוש") {
-        renewals++;
+        renewalsCount++;
         renewalsPremium += r.monthlyPremium;
       } else if (r.status === "חדש") {
         newPolicies++;
@@ -220,13 +282,13 @@ const InsuranceRenewalsReport = () => {
     });
 
     return {
-      renewals,
+      renewals: renewalsCount,
       renewalsPremium,
       newPolicies,
       newPremium,
       inProcess,
       inProcessPremium,
-      total: renewals + newPolicies + inProcess,
+      total: renewalsCount + newPolicies + inProcess,
       totalPremium: renewalsPremium + newPremium + inProcessPremium,
     };
   }, [records]);
@@ -240,52 +302,99 @@ const InsuranceRenewalsReport = () => {
             <h1 className="text-3xl font-bold text-foreground">דוח חידושי ביטוח</h1>
             <p className="text-muted-foreground mt-1">לפי חברות ביטוח וענפים</p>
           </div>
-          <div className="flex gap-3">
-            <Label
-              htmlFor="excel-upload"
-              className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-            >
-              <Upload className="h-5 w-5" />
-              ייבוא אקסל
-            </Label>
-            <Input
-              id="excel-upload"
-              type="file"
-              accept=".xlsx,.xls,.csv"
-              className="hidden"
-              onChange={handleFileUpload}
-            />
-            {records.length > 0 && (
+          {records.length > 0 && (
+            <div className="flex gap-3">
+              <Button onClick={handleClear} variant="outline" className="gap-2">
+                <RefreshCw className="h-5 w-5" />
+                נקה והתחל מחדש
+              </Button>
               <Button onClick={handlePrint} variant="outline" className="gap-2">
                 <Printer className="h-5 w-5" />
                 הדפסה
               </Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
-        {/* Upload instructions */}
+        {/* Data Source Selection */}
         {records.length === 0 && (
           <Card className="mt-6">
-            <CardContent className="p-8 text-center">
-              <FileSpreadsheet className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-xl font-semibold mb-2">העלה קובץ אקסל</h3>
-              <p className="text-muted-foreground mb-4">
-                הקובץ צריך לכלול את העמודות הבאות בסדר:
-              </p>
-              <div className="inline-block text-right bg-muted/50 rounded-lg p-4">
-                <ol className="list-decimal list-inside space-y-1 text-sm">
-                  <li>מספר פוליסה</li>
-                  <li>שם מבוטח</li>
-                  <li>סוג ביטוח</li>
-                  <li>חברת ביטוח (מנורה/הכשרה/איילון/חקלאי/שלמה)</li>
-                  <li>סטטוס (חדש/חידוש/בתהליך/בוטל)</li>
-                  <li>תאריך תחילה ראשוני</li>
-                  <li>פרמיה חודשית (מספר)</li>
-                  <li>אמצעי תשלום</li>
-                  <li>הערות</li>
-                </ol>
-              </div>
+            <CardContent className="p-8">
+              <h3 className="text-xl font-semibold mb-6 text-center">בחר מקור נתונים להפקת הדוח</h3>
+              
+              <Tabs defaultValue="system" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsTrigger value="system" className="gap-2 text-base">
+                    <Database className="h-5 w-5" />
+                    מהחידושים במערכת
+                  </TabsTrigger>
+                  <TabsTrigger value="excel" className="gap-2 text-base">
+                    <FileSpreadsheet className="h-5 w-5" />
+                    ייבוא מאקסל
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="system">
+                  <div className="text-center space-y-4">
+                    <div className="flex items-center justify-center gap-4 p-6 bg-muted/50 rounded-lg">
+                      <Database className="h-12 w-12 text-primary" />
+                      <div className="text-right">
+                        <p className="text-lg font-medium">הפק דוח מהחידושים במערכת</p>
+                        <p className="text-muted-foreground">
+                          {renewals.length} חידושים זמינים במערכת
+                        </p>
+                      </div>
+                    </div>
+                    <Button onClick={handleLoadFromSystem} size="lg" className="gap-2 text-base">
+                      <Database className="h-5 w-5" />
+                      הפק דוח מהמערכת
+                    </Button>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="excel">
+                  <div className="text-center space-y-4">
+                    <div className="flex items-center justify-center gap-4 p-6 bg-muted/50 rounded-lg">
+                      <FileSpreadsheet className="h-12 w-12 text-primary" />
+                      <div className="text-right">
+                        <p className="text-lg font-medium">העלה קובץ אקסל</p>
+                        <p className="text-muted-foreground">
+                          הקובץ צריך לכלול את העמודות הבאות בסדר:
+                        </p>
+                      </div>
+                    </div>
+                    <div className="inline-block text-right bg-muted/30 rounded-lg p-4 mx-auto">
+                      <ol className="list-decimal list-inside space-y-1 text-sm">
+                        <li>מספר פוליסה</li>
+                        <li>שם מבוטח</li>
+                        <li>סוג ביטוח</li>
+                        <li>חברת ביטוח (מנורה/הכשרה/איילון/חקלאי/שלמה)</li>
+                        <li>סטטוס (חדש/חידוש/בתהליך/בוטל)</li>
+                        <li>תאריך תחילה ראשוני</li>
+                        <li>פרמיה חודשית (מספר)</li>
+                        <li>אמצעי תשלום</li>
+                        <li>הערות</li>
+                      </ol>
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="excel-upload"
+                        className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-base"
+                      >
+                        <Upload className="h-5 w-5" />
+                        בחר קובץ אקסל
+                      </Label>
+                      <Input
+                        id="excel-upload"
+                        type="file"
+                        accept=".xlsx,.xls,.csv"
+                        className="hidden"
+                        onChange={handleFileUpload}
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         )}
@@ -294,6 +403,23 @@ const InsuranceRenewalsReport = () => {
           <div className="text-center py-8">
             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
             <p className="mt-2 text-muted-foreground">טוען נתונים...</p>
+          </div>
+        )}
+
+        {/* Data Source Indicator */}
+        {records.length > 0 && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            {dataSource === "system" ? (
+              <>
+                <Database className="h-4 w-4" />
+                <span>נתונים מהחידושים במערכת ({records.length} רשומות)</span>
+              </>
+            ) : (
+              <>
+                <FileSpreadsheet className="h-4 w-4" />
+                <span>נתונים מקובץ אקסל ({records.length} רשומות)</span>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -381,83 +507,36 @@ const InsuranceRenewalsReport = () => {
                         <table className="w-full text-sm border-collapse">
                           <thead>
                             <tr style={{ backgroundColor: "#E6F1F6" }}>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                #
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                מספר פוליסה
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                שם מבוטח
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                סוג ביטוח
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                חברה
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                עובד מטפל
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                סטטוס
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                תאריך תחילה
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                פרמיה חודשית
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                אמצעי תשלום
-                              </th>
-                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">
-                                הערות
-                              </th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">#</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">מספר פוליסה</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">שם מבוטח</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">סוג ביטוח</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">חברה</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">עובד מטפל</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">סטטוס</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">תאריך תחילה</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">פרמיה חודשית</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">אמצעי תשלום</th>
+                              <th className="border border-[#D6DADF] px-2 py-2 text-right font-semibold">הערות</th>
                             </tr>
                           </thead>
                           <tbody>
                             {statusRecords.map((record, idx) => (
                               <tr
                                 key={record.id}
-                                style={{
-                                  backgroundColor:
-                                    idx % 2 === 0 ? "#FFFFFF" : "#F1F4F6",
-                                }}
+                                style={{ backgroundColor: idx % 2 === 0 ? "#FFFFFF" : "#F1F4F6" }}
                               >
-                                <td className="border border-[#D6DADF] px-2 py-1.5 text-center">
-                                  {idx + 1}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5">
-                                  {record.policyNumber}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5 font-medium">
-                                  {record.insuredName}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5">
-                                  {record.insuranceType}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5">
-                                  {record.insuranceCompany}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5 font-medium">
-                                  {record.assignedEmployee}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5">
-                                  {record.status}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5">
-                                  {record.startDate}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5 text-center">
-                                  {record.monthlyPremium.toLocaleString("he-IL")} ₪
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5">
-                                  {record.paymentMethod}
-                                </td>
-                                <td className="border border-[#D6DADF] px-2 py-1.5 text-xs">
-                                  {record.notes}
-                                </td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5 text-center">{idx + 1}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5">{record.policyNumber}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5 font-medium">{record.insuredName}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5">{record.insuranceType}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5">{record.insuranceCompany}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5 font-medium">{record.assignedEmployee}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5">{record.status}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5">{record.startDate}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5 text-center">{record.monthlyPremium.toLocaleString("he-IL")} ₪</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5">{record.paymentMethod}</td>
+                                <td className="border border-[#D6DADF] px-2 py-1.5 text-xs">{record.notes}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -468,13 +547,8 @@ const InsuranceRenewalsReport = () => {
                         className="flex justify-between items-center px-4 py-2 text-sm"
                         style={{ backgroundColor: "#F1F4F6" }}
                       >
-                        <span>
-                          כמות: <strong>{statusRecords.length}</strong>
-                        </span>
-                        <span>
-                          סה"כ פרמיה חודשית:{" "}
-                          <strong>{statusPremium.toLocaleString("he-IL")} ₪</strong>
-                        </span>
+                        <span>כמות: <strong>{statusRecords.length}</strong></span>
+                        <span>סה"כ פרמיה חודשית: <strong>{statusPremium.toLocaleString("he-IL")} ₪</strong></span>
                       </div>
                     </div>
                   );
@@ -487,27 +561,19 @@ const InsuranceRenewalsReport = () => {
                 >
                   <div className="grid grid-cols-4 gap-4 text-sm">
                     <div className="text-center">
-                      <div className="font-bold text-lg" style={{ color: "#0077A3" }}>
-                        {companyRenewals}
-                      </div>
+                      <div className="font-bold text-lg" style={{ color: "#0077A3" }}>{companyRenewals}</div>
                       <div className="text-muted-foreground">חידושים</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-lg" style={{ color: "#0077A3" }}>
-                        {companyNew}
-                      </div>
+                      <div className="font-bold text-lg" style={{ color: "#0077A3" }}>{companyNew}</div>
                       <div className="text-muted-foreground">חדשים</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-lg" style={{ color: "#0077A3" }}>
-                        {companyProcess}
-                      </div>
+                      <div className="font-bold text-lg" style={{ color: "#0077A3" }}>{companyProcess}</div>
                       <div className="text-muted-foreground">תוספות/בתהליך</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-lg" style={{ color: "#F7931E" }}>
-                        {companyPremium.toLocaleString("he-IL")} ₪
-                      </div>
+                      <div className="font-bold text-lg" style={{ color: "#F7931E" }}>{companyPremium.toLocaleString("he-IL")} ₪</div>
                       <div className="text-muted-foreground">סה"כ פרמיה</div>
                     </div>
                   </div>
@@ -521,45 +587,27 @@ const InsuranceRenewalsReport = () => {
             className="mt-8 p-6 rounded-lg print:mt-4 print:p-4"
             style={{ backgroundColor: "#0077A3" }}
           >
-            <h3 className="text-xl font-bold text-white text-center mb-4">
-              סיכום כללי לסוכנות
-            </h3>
+            <h3 className="text-xl font-bold text-white text-center mb-4">סיכום כללי לסוכנות</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div className="bg-white/10 rounded-lg p-4">
-                <div className="text-3xl font-bold text-white">
-                  {totalSummary.renewals}
-                </div>
+                <div className="text-3xl font-bold text-white">{totalSummary.renewals}</div>
                 <div className="text-white/80 text-sm">חידושים</div>
-                <div className="text-[#F7931E] font-semibold mt-1">
-                  {totalSummary.renewalsPremium.toLocaleString("he-IL")} ₪
-                </div>
+                <div className="text-[#F7931E] font-semibold mt-1">{totalSummary.renewalsPremium.toLocaleString("he-IL")} ₪</div>
               </div>
               <div className="bg-white/10 rounded-lg p-4">
-                <div className="text-3xl font-bold text-white">
-                  {totalSummary.newPolicies}
-                </div>
+                <div className="text-3xl font-bold text-white">{totalSummary.newPolicies}</div>
                 <div className="text-white/80 text-sm">חדשים</div>
-                <div className="text-[#F7931E] font-semibold mt-1">
-                  {totalSummary.newPremium.toLocaleString("he-IL")} ₪
-                </div>
+                <div className="text-[#F7931E] font-semibold mt-1">{totalSummary.newPremium.toLocaleString("he-IL")} ₪</div>
               </div>
               <div className="bg-white/10 rounded-lg p-4">
-                <div className="text-3xl font-bold text-white">
-                  {totalSummary.inProcess}
-                </div>
+                <div className="text-3xl font-bold text-white">{totalSummary.inProcess}</div>
                 <div className="text-white/80 text-sm">תוספות/בתהליך</div>
-                <div className="text-[#F7931E] font-semibold mt-1">
-                  {totalSummary.inProcessPremium.toLocaleString("he-IL")} ₪
-                </div>
+                <div className="text-[#F7931E] font-semibold mt-1">{totalSummary.inProcessPremium.toLocaleString("he-IL")} ₪</div>
               </div>
               <div className="bg-white/20 rounded-lg p-4">
-                <div className="text-3xl font-bold text-[#F7931E]">
-                  {totalSummary.total}
-                </div>
+                <div className="text-3xl font-bold text-[#F7931E]">{totalSummary.total}</div>
                 <div className="text-white/80 text-sm">סה"כ פוליסות</div>
-                <div className="text-white font-bold mt-1">
-                  {totalSummary.totalPremium.toLocaleString("he-IL")} ₪
-                </div>
+                <div className="text-white font-bold mt-1">{totalSummary.totalPremium.toLocaleString("he-IL")} ₪</div>
               </div>
             </div>
           </div>
